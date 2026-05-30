@@ -1379,88 +1379,41 @@
     const sendBtn = document.getElementById('chat-send-btn');
     const optionsContainer = document.getElementById('quick-options');
 
-    // Facts database — Actualizado con información real de Ecrece
-    const ecreceFacts = {
-      servicios: `Ofrecemos 5 soluciones diseñadas para llevar clientes constantes y medibles a negocios locales:<br><br>
-1. <strong>Publicidad Objetiva</strong> — Campañas en redes sociales hipersegmentadas para generar tráfico cualificado y ventas reales.<br>
-2. <strong>Calendarios de Conversión</strong> — Ecosistema de contenido orgánico estratégico que convierte seguidores en prospectos.<br>
-3. <strong>Páginas con Agentes IA</strong> — Sitios web con agentes conversacionales 24/7 que atienden y llevan al lead a agendar.<br>
-4. <strong>Reputación Impecable</strong> — Sistema QR que filtra reseñas: 4-5 estrellas van a Google, 3 o menos llegan a tu WhatsApp privado.<br>
-5. <strong>Reactivación de Clientes</strong> — Recuperamos bases de datos "empolvadas" con ofertas irresistibles vía WhatsApp y anuncios.<br><br>
-🤖 <strong>Soluciones IA Empresarial</strong> — Aplicaciones y agentes de IA a la medida para automatizar áreas de tu empresa.`,
-      precios: `Nuestros servicios se estructuran de la siguiente manera:<br><br>
-• <strong>Ecosistema Completo (Setup):</strong> Desde <strong>Q1,000 hasta Q10,000</strong> según lo que implementemos (CRM, agente de IA, perfiles en redes, etc.).<br>
-• <strong>Gestión de Publicidad:</strong> El costo depende de tu inversión y nicho. Agenda una llamada para un análisis personalizado gratuito.<br>
-• <strong>Aplicaciones IA Empresarial:</strong> Cotización personalizada según el área y la complejidad de lo que se necesite automatizar.<br><br>
-¿Te gustaría que hablemos de cuál se adapta mejor a tu negocio?`,
-      calificacion: `Trabajamos con <strong>negocios locales establecidos en Guatemala y Centroamérica</strong>: clínicas dentales, veterinarias, restaurantes, centros de salud, estética y servicios profesionales.<br><br>
-Necesitas tener: un servicio o producto ya validado en el mercado, disposición para invertir en pauta publicitaria, y el deseo de delegar la captación de clientes a expertos en resultados.<br><br>
-<em>No trabajamos con emprendimientos sin producto validado, marcas personales que buscan seguidores, ni negocios sin presupuesto publicitario.</em>`,
-      reputacion: `Nuestro sistema de <strong>Reputación Impecable</strong> funciona así:<br><br>
-Creamos un código QR que entregas a tus clientes. Al escanearlo, los lleva a una página que les pide calificar del 1 al 5:<br>• Si califican <strong>4 o 5 estrellas</strong> → se les redirige automáticamente a tu ficha de Google para dejar la reseña pública.<br>• Si califican <strong>3 o menos</strong> → aparece un formulario y el comentario llega directo a tu <strong>WhatsApp privado</strong>, para que mejores internamente sin afectar tu reputación online.`,
-      reactivacion: `La <strong>Reactivación de Clientes</strong> es ideal si tienes una base de datos de contactos que ya no te compran.<br><br>
-Creamos juntos una oferta irresistible y la llevamos a esos clientes vía anuncios en redes sociales segmentados a tu lista + mensajes de WhatsApp. Muchas empresas en Guatemala tienen cientos de clientes dormidos que con la estrategia correcta vuelven a comprar.`,
-      ia_empresarial: `¡Sí, eso es exactamente lo que hacemos! Desarrollamos <strong>aplicaciones de IA a la medida</strong> que resuelven problemas reales en 4 áreas clave de cualquier empresa:<br><br>
-🎯 <strong>Marketing y Ventas</strong> — Agentes que califican leads, generan copies de anuncios, responden consultas y llevan al cliente a agendar o comprar.<br>
-📋 <strong>Administración</strong> — Apps que leen facturas, generan reportes automáticos, controlan archivos y organizan datos.<br>
-📦 <strong>Logística</strong> — Asistentes que rastrean pedidos, optimizan rutas y anticipan necesidades de inventario.<br>
-💼 <strong>Ventas y Atención</strong> — Chatbots avanzados que atienden 24/7 y escalan casos al equipo cuando es necesario.<br><br>
-Desde un chatbot simple hasta una plataforma completa personalizada, el alcance depende de tu empresa y objetivos.`,
-      agendar: `La mejor manera de avanzar es con una <strong>sesión de descubrimiento de 20 a 30 minutos</strong> donde analizamos tu negocio a fondo y te decimos exactamente qué necesitas.<br><br><a href='https://wa.me/50239442626' target='_blank' class='ws-btn-link'>📱 WhatsApp Directo</a> <button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Agendar Reunión</button>`,
-      sugerir_reunion: `Esa es una excelente pregunta. 😊 La respuesta precisa depende mucho del tipo de empresa, sus procesos actuales y los objetivos que tenga. Para darte una orientación útil y sin rodeos, lo ideal sería una <strong>reunión rápida de 20 a 30 minutos</strong> donde lo analizamos juntos sin compromiso.<br><br><a href='https://wa.me/50239442626' target='_blank' class='ws-btn-link'>📱 Hablemos por WhatsApp</a> <button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Agendar Reunión</button>`
+    // =================================================================
+    // AGENTE ECRECE 2.0 — PROTOCOLO COMPLETO DE CONOCIMIENTO
+    // Rol: Asistente comercial inteligente de Ecrece
+    // Tono: Directo, honesto, empático, enfocado en rendimiento
+    // Misión: Resolver dudas, derribar objeciones, guiar al agendamiento
+    // REGLA: Máximo 3 turnos → activar protocolo de agendamiento
+    // PROHIBIDO: Dar precios por chat
+    // =================================================================
+
+    var turnCount = 0;
+
+    var ctaAgendamiento = 'Para ver si estas herramientas de IA aplican a tu modelo de negocio, lo ideal es agendar una <strong>auditoría gratuita de 20 minutos</strong>.<br><br>No te vamos a vender nada de forma agresiva; la sesión es estrictamente para examinar si Ecrece es la solución que buscas y si tu empresa califica para el tipo de proyectos que ejecutamos.<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 WhatsApp Directo</a> <button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Elegir Día y Hora</button>';
+
+    var agente = {
+      servicios_resumen: 'Ecrece diseña y ejecuta <strong>4 soluciones de IA</strong> para que tu negocio capte, atienda y cierre clientes de forma automatizada:<br><br>1. 🌐 <strong>Sitios Web con IA y Agentes de Ventas</strong> — Páginas que venden + agentes 24/7 que cualifican y cierran.<br>2. ⭐ <strong>Sistema de Reviews Inteligente</strong> — Filtra reseñas: las buenas van a Google, las malas llegan a tu WhatsApp privado.<br>3. 🔄 <strong>Reactivación de Leads Muertos</strong> — Campañas automatizadas para recuperar ventas perdidas sin esfuerzo manual.<br>4. 📅 <strong>Calendarios de Conversión Orgánica</strong> — Estrategias de contenido que convierten seguidores en compradores.',
+
+      sitios_ia: 'Nuestros <strong>Sitios Web con IA y Agentes de Ventas</strong> son páginas web estructuradas para vender, combinadas con agentes inteligentes que atienden, cualifican y cierran las 24 horas del día, los 7 días de la semana.<br><br>Funcionan en canales como WhatsApp o directamente en tu web. Lo poderoso es que <strong>filtran a los preguntones</strong> y le entregan a tu equipo humano solo los leads que están listos para comprar.<br><br>Tu equipo deja de perder tiempo con curiosos y se enfoca en cerrar.',
+
+      reviews: 'El <strong>Sistema de Reviews Inteligente</strong> es un filtro automatizado de reputación local:<br><br>• Si el cliente califica con <strong>4 o 5 estrellas</strong> → se le redirige automáticamente a <strong>Google Reviews</strong> para que deje su reseña pública.<br>• Si califica con <strong>menos de 3 estrellas</strong> → el feedback se captura en privado y llega a tu WhatsApp para mejora interna.<br><br>Resultado: tu reputación online solo muestra lo mejor, y tú mejoras internamente sin que nadie lo vea.',
+
+      reactivacion: 'La <strong>Reactivación de Leads Muertos</strong> es ideal si tienes una base de datos de contactos que ya no te compran.<br><br>Creamos juntos una <strong>oferta irresistible</strong> y la IA se encarga de reenganchar a esos clientes mediante campañas multicanal automatizadas — WhatsApp, anuncios en redes sociales, correo — sin esfuerzo manual de tu parte.<br><br>Muchas empresas en Guatemala tienen cientos de clientes dormidos que con la estrategia correcta vuelven a comprar.',
+
+      calendarios: 'Los <strong>Calendarios de Conversión Orgánica</strong> son estrategias de contenido estructuradas con ganchos y CTAs validados que transforman seguidores pasivos en compradores activos.<br><br>No se trata de publicar por publicar; es un sistema diseñado para que cada pieza de contenido lleve al seguidor un paso más cerca de agendar o comprar.',
+
+      precios: 'Entiendo la pregunta, y quiero ser honesto contigo: <strong>no damos precios por chat</strong> y hay una buena razón.<br><br>El valor de cada solución de IA depende del tamaño de tu negocio, tu volumen de mensajes y qué procesos específicos vamos a automatizar. <strong>Cada proyecto se hace completamente a la medida.</strong><br><br>Para darte un presupuesto exacto y justo, necesitamos conocer tu operación en una sesión estratégica de 20 minutos.',
+
+      objecion_bot: 'No. Esto no es un bot de respuestas automáticas rígido como los que seguramente has visto.<br><br>Es un <strong>agente con IA entrenado con la filosofía de tu negocio</strong> que entiende el contexto, mantiene conversaciones naturales y persuasivas, y se adapta a cada cliente.<br><br>La diferencia es enorme: un bot genérico repite scripts; un agente de Ecrece <strong>vende</strong>.',
+
+      objecion_humano: 'Al contrario. La IA <strong>no reemplaza</strong> a tu equipo humano, lo <strong>potencia</strong>.<br><br>Se encarga del trabajo repetitivo — filtrar datos, responder FAQs, cualificar leads — para que tu equipo solo intervenga cuando el cliente <strong>está listo para el cierre</strong>.<br><br>Es como tener un asistente incansable que trabaja 24/7 y le pasa a tu equipo solo las oportunidades de oro.',
+
+      calificacion: 'Trabajamos con <strong>negocios locales establecidos en Guatemala y Centroamérica</strong>: clínicas dentales, veterinarias, restaurantes, centros de salud, estética y servicios profesionales.<br><br>Lo que necesitas: un servicio o producto ya validado en el mercado y el deseo de delegar la captación de clientes a un sistema inteligente.<br><br><em>No trabajamos con emprendimientos sin producto validado ni negocios sin disposición de invertir en su crecimiento.</em>'
     };
 
-    // INTENTAR CARGAR FAQS PERSONALIZADAS DESDE LOCALSTORAGE (CRM INTEGRATION)
-    function cargarFaqsPersonalizadas() {
-      const customFaqString = localStorage.getItem('ecrece_landing_faq');
-      if (customFaqString) {
-        try {
-          let cleanFaq = customFaqString;
-          // Decodificar: puede venir como JSON.stringify(string) = string con comillas
-          try { cleanFaq = JSON.parse(cleanFaq); } catch(e) { /* ya es string plano */ }
-          // Si después del parse sigue siendo un string con comillas, parsear de nuevo
-          if (typeof cleanFaq === 'string' && cleanFaq.startsWith('"')) {
-            try { cleanFaq = JSON.parse(cleanFaq); } catch(e) {}
-          }
-          
-          // Soportar saltos de línea reales y escapados
-          const lines = cleanFaq.split(/\\n|\n/);
-          console.log('[Ecrece] FAQs cargadas del CRM:', lines);
-          
-          lines.forEach(line => {
-            const parts = line.split(':');
-            if (parts.length >= 2) {
-              const key = parts[0].trim().toLowerCase();
-              const value = parts.slice(1).join(':').trim();
-              if (key === 'setup' || key === 'precio') {
-                ecreceFacts.precios = `Nuestros servicios se estructuran de la siguiente manera:<br><br>• <strong>Configuración Personalizada (CRM/Bots):</strong> ${value}<br><br>¿Te gustaría agendar una llamada rápida para cotizar tu caso?`;
-              }
-              if (key === 'areas' || key === 'servicios') {
-                ecreceFacts.servicios = `Ofrecemos soluciones avanzadas para optimizar las siguientes áreas de tu empresa:<br><br>${value}<br><br>¿De cuál te gustaría recibir un diagnóstico gratuito?`;
-              }
-              if (key === 'reunion' || key === 'contacto') {
-                ecreceFacts.agendar = `${value}<br><br><a href='https://wa.me/50239442626' target='_blank' class='ws-btn-link'>📱 WhatsApp Directo</a> <button onclick='openCalendlyModal()' class='calendly-btn-link' style='background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;'>📅 Agendar Reunión</button>`;
-              }
-            }
-          });
-        } catch (err) {
-          console.error("Error al cargar FAQs compartidas del CRM:", err);
-        }
-      }
-    }
-
-    // Cargar en el inicio
-    cargarFaqsPersonalizadas();
-
-    // Escuchador para actualizar conocimientos en tiempo real sin recargar la Landing (para pestaña local)
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'ecrece_landing_faq') {
-        cargarFaqsPersonalizadas();
-      }
-    });
-
     function appendUserMessage(text) {
-      const userBubble = document.createElement('div');
+      var userBubble = document.createElement('div');
       userBubble.className = 'chat-bubble user';
       userBubble.textContent = text;
       chatHistory.appendChild(userBubble);
@@ -1468,7 +1421,7 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
     }
 
     function appendBotResponse(htmlText) {
-      const botBubble = document.createElement('div');
+      var botBubble = document.createElement('div');
       botBubble.className = 'chat-bubble bot';
       botBubble.innerHTML = htmlText;
       chatHistory.appendChild(botBubble);
@@ -1476,100 +1429,116 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
     }
 
     function showScheduleOptions() {
-      optionsContainer.innerHTML = `
-        <button class="chat-quick-btn" onclick="sendQuickMessage('Agendar por WhatsApp')">📱 Agendar por WhatsApp</button>
-        <button class="chat-quick-btn" onclick="sendQuickMessage('Ver Calendario Online')">📅 Ver Calendario</button>
-        <button class="chat-quick-btn" onclick="sendQuickMessage('¿Qué servicios ofrecen?')">Ver otros servicios</button>
-      `;
+      optionsContainer.innerHTML = '<button class="chat-quick-btn" onclick="sendQuickMessage(\'Quiero agendar la auditoría\')">📅 Agendar Auditoría Gratuita</button><button class="chat-quick-btn" onclick="sendQuickMessage(\'Hablar por WhatsApp\')">📱 WhatsApp Directo</button><button class="chat-quick-btn" onclick="sendQuickMessage(\'¿Qué soluciones ofrecen?\')">Ver soluciones</button>';
       optionsContainer.style.display = 'flex';
+    }
+
+    function showServicesOptions() {
+      optionsContainer.innerHTML = '<button class="chat-quick-btn" onclick="sendQuickMessage(\'Sitios Web con IA\')">🌐 Sitios con IA</button><button class="chat-quick-btn" onclick="sendQuickMessage(\'Sistema de Reviews\')">⭐ Reviews</button><button class="chat-quick-btn" onclick="sendQuickMessage(\'Reactivación de Leads\')">🔄 Reactivación</button><button class="chat-quick-btn" onclick="sendQuickMessage(\'Calendarios Orgánicos\')">📅 Calendarios</button>';
+      optionsContainer.style.display = 'flex';
+    }
+
+    function respuestaForzadaAgendamiento() {
+      appendBotResponse('Has hecho excelentes preguntas. 👏 Para darte respuestas realmente útiles y específicas para <strong>tu</strong> negocio, lo mejor es que hablemos directamente.<br><br>' + ctaAgendamiento);
     }
 
     function sendQuickMessage(optionText) {
       optionsContainer.style.display = 'none';
       appendUserMessage(optionText);
+      turnCount++;
 
-      setTimeout(() => {
-        if (optionText.includes('servicios') || optionText.includes('Ver otros')) {
-          appendBotResponse(ecreceFacts.servicios);
-          setTimeout(() => {
-            appendBotResponse('¿Sobre cuál te gustaría saber más?');
-            optionsContainer.innerHTML = `
-              <button class="chat-quick-btn" onclick="sendQuickMessage('Cuéntame sobre Publicidad Objetiva')">Publicidad Objetiva</button>
-              <button class="chat-quick-btn" onclick="sendQuickMessage('Cuéntame sobre Reputación Impecable')">Reputación Impecable</button>
-              <button class="chat-quick-btn" onclick="sendQuickMessage('Cuéntame sobre Reactivación de Clientes')">Reactivación de Clientes</button>
-              <button class="chat-quick-btn" onclick="sendQuickMessage('¿Cuánto cuesta?')">¿Cuánto cuesta?</button>
-            `;
-            optionsContainer.style.display = 'flex';
-          }, 900);
-        } else if (optionText.includes('precios') || optionText.includes('cuesta') || optionText.includes('costo')) {
-          appendBotResponse(ecreceFacts.precios);
+      setTimeout(function() {
+        if (turnCount > 3) { respuestaForzadaAgendamiento(); return; }
+        var q = optionText.toLowerCase();
+
+        if (q.includes('soluciones') || q.includes('servicios') || q.includes('que hacen') || q.includes('ofrec')) {
+          appendBotResponse(agente.servicios_resumen);
+          setTimeout(showServicesOptions, 900);
+        } else if (q.includes('sitio') || q.includes('web') || q.includes('página')) {
+          appendBotResponse(agente.sitios_ia);
           setTimeout(showScheduleOptions, 900);
-        } else if (optionText.includes('califico') || optionText.includes('requisito')) {
-          appendBotResponse(ecreceFacts.calificacion);
+        } else if (q.includes('review') || q.includes('reseña') || q.includes('reputaci') || q.includes('google') || q.includes('estrellas')) {
+          appendBotResponse(agente.reviews);
           setTimeout(showScheduleOptions, 900);
-        } else if (optionText.includes('Reputación')) {
-          appendBotResponse(ecreceFacts.reputacion);
+        } else if (q.includes('reactiv') || q.includes('leads muertos') || q.includes('dormid') || q.includes('inactiv')) {
+          appendBotResponse(agente.reactivacion);
           setTimeout(showScheduleOptions, 900);
-        } else if (optionText.includes('Reactivación')) {
-          appendBotResponse(ecreceFacts.reactivacion);
+        } else if (q.includes('calendario') || q.includes('orgánic') || q.includes('contenido')) {
+          appendBotResponse(agente.calendarios);
           setTimeout(showScheduleOptions, 900);
-        } else if (optionText.includes('Publicidad')) {
-          appendBotResponse('La <strong>Publicidad Objetiva</strong> es nuestro servicio estrella. Generamos un flujo constante de tráfico cualificado hacia tu negocio mediante campañas hipersegmentadas en Facebook e Instagram Ads, construidas sobre embudos de conversión personalizados para tu nicho y zona geográfica.<br><br>El objetivo es simple: que las personas correctas vean tus anuncios y vengan a tu negocio de forma constante y medible.');
-          setTimeout(showScheduleOptions, 900);
-        } else if (optionText.toLowerCase().includes('whatsapp') || optionText.includes('WhatsApp')) {
-          appendBotResponse("¡Perfecto! Haz clic aquí para hablar directo con el equipo de Ecrece:<br><br>" + ecreceFacts.agendar);
-        } else if (optionText.includes('Calendario')) {
+        } else if (q.includes('precio') || q.includes('costo') || q.includes('cuánto') || q.includes('cuanto') || q.includes('cobra') || q.includes('tarif')) {
+          appendBotResponse(agente.precios + '<br><br>' + ctaAgendamiento);
+        } else if (q.includes('whatsapp') || q.includes('hablar')) {
+          appendBotResponse('¡Perfecto! Haz clic aquí para hablar directo con el equipo:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 Escribir a Ecrece por WhatsApp (+502 39442626)</a>');
+        } else if (q.includes('agendar') || q.includes('auditoría') || q.includes('reunión') || q.includes('cita') || q.includes('calend')) {
           openCalendlyModal();
-          appendBotResponse("Desplegando calendario en pantalla...");
+          appendBotResponse('¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅');
         } else {
-          appendBotResponse("Entendido. Para cualquier consulta específica, lo mejor es una llamada corta donde analizamos tu negocio en detalle.<br><br>" + ecreceFacts.agendar);
+          appendBotResponse('Buena pregunta. ' + ctaAgendamiento);
         }
       }, 800);
     }
 
     function handleCustomInput() {
-      const query = userInput.value.trim().toLowerCase();
-      if (!query) return;
-
-      appendUserMessage(userInput.value);
+      var rawQuery = userInput.value.trim();
+      if (!rawQuery) return;
+      var query = rawQuery.toLowerCase();
+      appendUserMessage(rawQuery);
       userInput.value = '';
       optionsContainer.style.display = 'none';
+      turnCount++;
 
-      setTimeout(() => {
-        if (query.includes('precio') || query.includes('costo') || query.includes('cobra') || query.includes('cuanto') || query.includes('valor') || query.includes('quetzal') || query.includes('usd') || query.includes('tarif')) {
-          appendBotResponse(ecreceFacts.precios);
+      setTimeout(function() {
+        if (turnCount > 3) { respuestaForzadaAgendamiento(); return; }
+
+        if (query.includes('precio') || query.includes('costo') || query.includes('cobra') || query.includes('cuanto') || query.includes('valor') || query.includes('tarif') || query.includes('presupuesto') || query.includes('cotiz')) {
+          appendBotResponse(agente.precios + '<br><br>' + ctaAgendamiento);
+        } else if (query.includes('servicio') || query.includes('que hacen') || query.includes('ofrec') || query.includes('solucio') || query.includes('que venden') || query.includes('como funciona')) {
+          appendBotResponse(agente.servicios_resumen);
+          setTimeout(showServicesOptions, 900);
+        } else if (query.includes('sitio') || query.includes('web') || query.includes('página') || query.includes('pagina') || query.includes('agente de venta')) {
+          appendBotResponse(agente.sitios_ia);
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('servicio') || query.includes('producto') || query.includes('que hacen') || query.includes('ofrec') || query.includes('que venden')) {
-          appendBotResponse(ecreceFacts.servicios);
+        } else if (query.includes('reputaci') || query.includes('reseña') || query.includes('review') || query.includes('google') || query.includes('qr') || query.includes('estrellas')) {
+          appendBotResponse(agente.reviews);
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('reputaci') || query.includes('reseña') || query.includes('google') || query.includes('qr')) {
-          appendBotResponse(ecreceFacts.reputacion);
+        } else if (query.includes('reactiv') || query.includes('base de dato') || query.includes('cliente') || query.includes('dormid') || query.includes('inactiv') || query.includes('recuperar')) {
+          appendBotResponse(agente.reactivacion);
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('reactiv') || query.includes('base de dato') || query.includes('cliente') || query.includes('dormid')) {
-          appendBotResponse(ecreceFacts.reactivacion);
+        } else if (query.includes('calendario') || query.includes('orgánic') || query.includes('organico') || query.includes('contenido') || query.includes('redes social') || query.includes('instagram') || query.includes('facebook') || query.includes('tiktok')) {
+          appendBotResponse(agente.calendarios);
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('calific') || query.includes('requisito') || query.includes('para quien') || query.includes('aplica') || query.includes('mi negocio')) {
-          appendBotResponse(ecreceFacts.calificacion);
+        } else if (query.includes('bot') || query.includes('robot') || query.includes('automátic') || query.includes('automatic') || query.includes('script')) {
+          appendBotResponse(agente.objecion_bot);
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('agend') || query.includes('cita') || query.includes('reuni') || query.includes('llamada') || query.includes('calend') || query.includes('whatsapp') || query.includes('contact')) {
+        } else if (query.includes('humano') || query.includes('personal') || query.includes('reemplaz') || query.includes('perder') || query.includes('toque')) {
+          appendBotResponse(agente.objecion_humano);
+          setTimeout(showScheduleOptions, 900);
+        } else if (query.includes('ia') || query.includes('inteligencia') || query.includes('chatbot') || query.includes('automatiz') || query.includes('tecnolog')) {
+          appendBotResponse(agente.sitios_ia + '<br><br>Pero eso es solo una de las 4 soluciones. ¿Quieres ver el ecosistema completo?');
+          setTimeout(showServicesOptions, 900);
+        } else if (query.includes('calific') || query.includes('requisito') || query.includes('para quien') || query.includes('aplica') || query.includes('mi negocio') || query.includes('funciona para')) {
+          appendBotResponse(agente.calificacion);
+          setTimeout(showScheduleOptions, 900);
+        } else if (query.includes('agend') || query.includes('cita') || query.includes('reuni') || query.includes('llamada') || query.includes('calend') || query.includes('auditor')) {
           openCalendlyModal();
-          appendBotResponse("¡Excelente decisión! Desplegando el calendario de reservas en pantalla...");
-        } else if (query.includes('ia') || query.includes('inteligencia') || query.includes('chatbot') || query.includes('agente') || query.includes('bot') || query.includes('automatiz') || query.includes('robot')) {
-          appendBotResponse(ecreceFacts.ia_empresarial);
-          setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('app') || query.includes('aplicacion') || query.includes('aplicación') || query.includes('software') || query.includes('sistema') || query.includes('plataforma') || query.includes('reporte') || query.includes('dashboard') || query.includes('panel')) {
-          appendBotResponse(ecreceFacts.ia_empresarial + '<br><br>El alcance y costo de cada proyecto varía según la empresa. Lo mejor es revisarlo juntos.');
-          setTimeout(() => appendBotResponse(ecreceFacts.sugerir_reunion), 1000);
+          appendBotResponse('¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅');
+        } else if (query.includes('whatsapp') || query.includes('contact') || query.includes('hablar') || query.includes('escribir') || query.includes('teléfono') || query.includes('telefono') || query.includes('número') || query.includes('numero')) {
+          appendBotResponse('¡Claro! Puedes escribirnos directamente:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 WhatsApp Ecrece (+502 39442626)</a><br><br>O si prefieres elegir día y hora para una videollamada:<br><button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Ver Calendario de Auditorías</button>');
+        } else if (query.includes('hola') || query.includes('buenas') || query.includes('buenos') || query.includes('hey') || query.includes('qué tal') || query.includes('buen día') || query.includes('saludos')) {
+          appendBotResponse('¡Hola! 👋 Soy el asistente de Ecrece. Estoy aquí para resolver cualquier duda sobre nuestras soluciones de IA para negocios locales.<br><br>¿En qué puedo ayudarte?');
+          setTimeout(showServicesOptions, 900);
         } else {
-          appendBotResponse(ecreceFacts.sugerir_reunion);
+          appendBotResponse('Esa es una excelente pregunta. 😊 La respuesta precisa depende mucho del tipo de empresa y sus objetivos. Para darte una orientación útil y sin rodeos, lo ideal sería una <strong>auditoría rápida de 20 minutos</strong> donde lo analizamos juntos sin compromiso.<br><br>' + ctaAgendamiento);
         }
       }, 800);
     }
 
     sendBtn.addEventListener('click', handleCustomInput);
-    userInput.addEventListener('keypress', (e) => {
+    userInput.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') handleCustomInput();
     });
+
 
     // CALENDLY MODAL CONTROLS ON LANDING
     let selectedHora = 'Hora de Calendly';
