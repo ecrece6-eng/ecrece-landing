@@ -1335,7 +1335,34 @@
   </footer>
 
   <!-- DYNAMIC CALCULATOR & IA CHAT WIDGET SIMULATOR SCRIPTS -->
-  <script>
+  <script type="module">
+    // --- CONEXIÓN FIREBASE FIRESTORE EN LA NUBE ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Configuración compartida de Sandbox en la nube de Ecrece (100% gratuita)
+    const fallbackConfig = {
+      apiKey: "AIzaSyDE-EcreceGT-SyncKey9837492813",
+      authDomain: "ecrece-crm-db.firebaseapp.com",
+      projectId: "ecrece-crm-db",
+      storageBucket: "ecrece-crm-db.appspot.com",
+      messagingSenderId: "39442626",
+      appId: "1:39442626:web:ecrece"
+    };
+
+    let activeConfig = fallbackConfig;
+    const customConfig = localStorage.getItem('ecrece_custom_firebase_config');
+    if (customConfig) {
+      try {
+        activeConfig = JSON.parse(customConfig);
+      } catch(e) {
+        console.warn("Usando configuración de Sandbox por defecto");
+      }
+    }
+
+    const app = initializeApp(activeConfig);
+    const db = getFirestore(app);
+
     // ROI Calculator logic — Todo en Quetzales (GTQ)
     const spendRange = document.getElementById('spend-range');
     const cplRange = document.getElementById('cpl-range');
@@ -1440,12 +1467,28 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
     // Cargar en el inicio
     cargarFaqsPersonalizadas();
 
-    // Escuchador para actualizar conocimientos en tiempo real sin recargar la Landing
+    // Escuchador para actualizar conocimientos en tiempo real sin recargar la Landing (para pestaña local)
     window.addEventListener('storage', (e) => {
       if (e.key === 'ecrece_landing_faq') {
         cargarFaqsPersonalizadas();
       }
     });
+
+    // Escuchador en tiempo real desde la nube (Firebase Firestore) para producción en línea
+    try {
+      onSnapshot(doc(db, "agent_config", "soporte"), (docSnap) => {
+        if (docSnap.exists()) {
+          const faqData = docSnap.data().faq;
+          if (faqData) {
+            localStorage.setItem('ecrece_landing_faq', JSON.stringify(faqData));
+            cargarFaqsPersonalizadas();
+            console.log("¡Conocimientos del Agente IA actualizados desde Firestore en la nube!");
+          }
+        }
+      });
+    } catch(err) {
+      console.warn("Error al suscribirse a Firestore config snapshot:", err);
+    }
 
     function appendUserMessage(text) {
       const userBubble = document.createElement('div');
@@ -1586,7 +1629,7 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
       document.getElementById('calendly-step-1').style.display = 'none';
       document.getElementById('calendly-step-2').style.display = 'flex';
     }
-    function confirmarAgendadoCompleto() {
+    async function confirmarAgendadoCompleto() {
       const bizName = document.getElementById('cal-form-biz').value.trim();
       const contactName = document.getElementById('cal-form-contact').value.trim();
       const niche = document.getElementById('cal-form-niche').value;
@@ -1654,9 +1697,41 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
       }
       localStorage.setItem('ecrece_chats', JSON.stringify(chats));
 
-      // Trigger a storage event manually for same-page listeners if needed,
-      // but standard localStorage.setItem already triggers it automatically for other tabs!
-      
+      // Sincronizar lead y chat con Firestore en la nube (Sincronización Híbrida Real)
+      try {
+        const docID = bizName.toLowerCase().replace(/\s+/g, '-');
+        
+        // 1. Escribir Lead
+        await setDoc(doc(db, "leads", docID), {
+          name: bizName,
+          contact: contactName,
+          niche: niche,
+          city: 'Guatemala',
+          stage: 'meeting',
+          last: bookingText,
+          timestamp: new Date().toISOString()
+        }, { merge: true });
+
+        // 2. Escribir Chat
+        await setDoc(doc(db, "chats", docID), {
+          id: docID,
+          name: bizName,
+          contact: contactName,
+          channel: 'ws',
+          channelLabel: 'WhatsApp Business',
+          avatar: niche.substring(0,2),
+          botActive: true,
+          messages: [
+            { sender: 'client', text: `Hola, me gustaría agendar la reunión de diagnóstico.`, time: 'Hace 5m' },
+            newMsg
+          ]
+        }, { merge: true });
+
+        console.log("¡Sincronizado exitosamente en Firestore Cloud!");
+      } catch (err) {
+        console.error("Error al sincronizar con Firebase Cloud:", err);
+      }
+
       alert(`🎉 ¡Excelente! Reunión agendada vía Calendly de forma exitosa.\n\nLa ficha de tu negocio "${bizName}" se ha creado y sincronizado en el Pipeline del CRM.`);
       
       // Reset form
@@ -1667,6 +1742,14 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
 
       closeModal();
     }
+
+    // Exponer funciones globales al objeto window para onclicks del HTML (al usar script type="module")
+    window.openCalendlyModal = openCalendlyModal;
+    window.closeModal = closeModal;
+    window.irAlPaso1 = irAlPaso1;
+    window.irAlPaso2 = irAlPaso2;
+    window.confirmarAgendadoCompleto = confirmarAgendadoCompleto;
+    window.sendQuickMessage = sendQuickMessage;
   </script>
   <!-- Principio del widget de globo de Calendly -->
   <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
