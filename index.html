@@ -964,6 +964,52 @@
       color: var(--text-dim);
     }
 
+    /* Modal System for Calendly */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1.5rem;
+    }
+    .modal-overlay.active { display: flex; }
+    
+    .modal-card {
+      background: #1e252e;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 640px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      overflow: hidden;
+      font-family: 'Inter', sans-serif;
+      text-align: left;
+    }
+    .modal-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header h3 { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; color: white; }
+    .close-modal-btn {
+      background: transparent;
+      border: none;
+      color: #d1d5db;
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .close-modal-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+
   </style>
 </head>
 <body>
@@ -981,11 +1027,10 @@
         <a href="#servicios">Servicios</a>
         <a href="#calculadora">Calculadora</a>
         <a href="#soluciones-ia">Especial IA</a>
-        <a href="#filtro">Admisión</a>
         <a href="#contacto" class="cta-btn">Agendar</a>
       </nav>
       <!-- Mobile Booking CTA -->
-      <a href="https://wa.me/50239443636" class="cta-btn" style="padding: 0.55rem 1.1rem; font-size: 0.85rem; @media (min-width: 992px) { display: none; }">WhatsApp</a>
+      <a href="https://wa.me/50239442626" class="cta-btn" style="padding: 0.55rem 1.1rem; font-size: 0.85rem; @media (min-width: 992px) { display: none; }">WhatsApp</a>
     </div>
   </header>
 
@@ -1003,39 +1048,6 @@
         <div class="hero-actions">
           <a href="#contacto" class="cta-btn" style="padding: 0.95rem 2.4rem; font-size: 1rem; border-radius: 50px;">Agendar Sesión de Descubrimiento</a>
           <a href="#servicios" class="btn-secondary" style="padding: 0.95rem 2.4rem; font-size: 1rem;">Ver Servicios</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- QUALIFICATION / ADMISSION FILTER SECTION -->
-  <section class="filter-section" id="filtro">
-    <div class="container">
-      <div class="filter-box">
-        <h2>¿A quién podemos ayudar?</h2>
-        <p>Para asegurar la máxima calidad y resultados claros, no trabajamos con cualquier tipo de empresa. Nos enfocamos exclusivamente en perfiles donde tenemos un impacto medible probado.</p>
-        
-        <div class="filter-columns">
-          
-          <div class="filter-col in">
-            <h4>✓ Sí calificas si eres:</h4>
-            <ul>
-              <li><strong>Negocio Local Establecido:</strong> Clínicas dentales, veterinarias, restaurantes, centros de salud, estética y servicios profesionales.</li>
-              <li><strong>Presupuesto de Pauta Disponible:</strong> Dispuesto a invertir activamente en anuncios digitales.</li>
-              <li><strong>Negocio Digital Validado:</strong> Empresas en línea con un producto o servicio de alta demanda ya probado.</li>
-              <li><strong>Deseo de Delegar:</strong> Listos para confiar la captación de clientes en profesionales de performance.</li>
-            </ul>
-          </div>
-
-          <div class="filter-col out">
-            <h4>✕ No calificas si eres:</h4>
-            <ul>
-              <li><strong>Emprendimientos sin Producto Validado:</strong> Negocios sin un servicio consolidado en el mercado.</li>
-              <li><strong>Marcas Personales / Influencers:</strong> Enfocados únicamente en buscar "seguidores" o "likes" de vanidad.</li>
-              <li><strong>Negocios sin Presupuesto Publicitario:</strong> Empresas que no pueden invertir en pauta pagada en Facebook/Google.</li>
-            </ul>
-          </div>
-
         </div>
       </div>
     </div>
@@ -1238,15 +1250,104 @@
         <p>Elige el canal de contacto que prefieras. Hablemos de tus objetivos y creamos un embudo de captación diseñado a la medida de tu facturación.</p>
         
         <div class="cta-buttons">
-          <a href="https://wa.me/50239443636" target="_blank" class="cta-ws-btn">
+          <a href="https://wa.me/50239442626" target="_blank" class="cta-ws-btn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display:inline-block; vertical-align: middle;"><path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 0 0 1.333 4.982L2 22l5.202-1.362a9.92 9.92 0 0 0 4.808 1.226h.003c5.502 0 9.99-4.479 9.99-9.986C22.003 6.478 17.517 2 12.012 2zm5.789 14.12c-.247.697-1.442 1.353-2.002 1.411-.5.053-1.15.088-3.411-.844-2.891-1.192-4.736-4.133-4.88-4.324-.144-.191-1.154-1.534-1.154-2.927 0-1.393.729-2.074 1.002-2.361.272-.288.597-.36.797-.36.2 0 .399.002.573.01.178.008.417-.067.653.504.242.583.823 2.009.895 2.153.072.144.12.313.024.504-.096.191-.144.312-.288.48l-.24.288c-.134.145-.274.301-.115.574.159.273.708 1.168 1.52 1.892.812.724 1.493.948 1.772 1.085.28.137.443.115.603-.067.16-.183.68-.79.86-.96.182-.172.364-.144.603-.056.24.088 1.52.716 1.782.846.262.13.437.196.5.309.064.113.064.653-.183 1.35z"/></svg>
-            Agendar por WhatsApp (+502 39443636)
+            Agendar por WhatsApp (+502 39442626)
           </a>
-          <a href="https://calendly.com" target="_blank" class="btn-secondary" style="padding: 0.95rem 2.2rem; font-size: 1rem; border-radius: 50px;">Agendar vía Calendly</a>
+          <button onclick="openCalendlyModal()" class="btn-secondary" style="padding: 0.95rem 2.2rem; font-size: 1rem; border-radius: 50px; background:transparent; cursor:pointer;">Agendar vía Calendly</button>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- MODAL: MOCK CALENDLY -->
+  <div class="modal-overlay" id="modal-calendly">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header" style="background:#00a2ff; color:white;">
+        <h3>📅 Agenda de Reuniones de Diagnóstico Ecrece</h3>
+        <button class="close-modal-btn" onclick="closeModal()" style="color:white;">&times;</button>
+      </div>
+      <div class="modal-body" style="background:#f7f9fa; color:#2d3748; padding: 2rem; display:flex; flex-direction:column; gap:1.5rem;">
+        <!-- STEP 1: SELECT DAY AND TIME -->
+        <div id="calendly-step-1">
+          <div style="text-align:center; margin-bottom: 1.5rem;">
+            <h4 style="font-size:1.15rem; font-weight:700; color:#1a202c; margin-bottom:0.25rem;">Llamada de Performance & Viabilidad (20-30 min)</h4>
+            <p style="font-size:0.85rem; color:#718096;">Selecciona un horario para agendar tu llamada sin costo con Gualberto.</p>
+          </div>
+          
+          <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:1rem;">
+            <div style="background:white; padding:1rem; border-radius:10px; border:1px solid #e2e8f0; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+              <div style="font-weight:700; font-size:0.85rem; color:#4a5568; margin-bottom:0.75rem; text-align:center;">Junio 2026</div>
+              <div style="display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; font-size:0.75rem; text-align:center;">
+                <span style="font-weight:600; color:#a0aec0;">D</span><span style="font-weight:600; color:#a0aec0;">L</span><span style="font-weight:600; color:#a0aec0;">M</span><span style="font-weight:600; color:#a0aec0;">M</span><span style="font-weight:600; color:#a0aec0;">J</span><span style="font-weight:600; color:#a0aec0;">V</span><span style="font-weight:600; color:#a0aec0;">S</span>
+                <span style="color:#cbd5e0;">31</span>
+                <span style="background:#edf2f7; border-radius:4px; padding:4px; font-weight:600; color:#4a5568; cursor:pointer;" onclick="selectDay(1)">1</span>
+                <span style="background:#edf2f7; border-radius:4px; padding:4px; font-weight:600; color:#4a5568; cursor:pointer;" onclick="selectDay(2)">2</span>
+                <span style="background:#edf2f7; border-radius:4px; padding:4px; font-weight:600; color:#4a5568; cursor:pointer;" onclick="selectDay(3)">3</span>
+                <span style="background:#00a2ff; color:white; border-radius:4px; padding:4px; font-weight:700; cursor:pointer;" onclick="selectDay(4)">4</span>
+                <span style="background:#edf2f7; border-radius:4px; padding:4px; font-weight:600; color:#4a5568; cursor:pointer;" onclick="selectDay(5)">5</span>
+                <span style="color:#cbd5e0;">6</span><span style="color:#cbd5e0;">7</span>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.5rem; justify-content:center;">
+              <button style="background:white; border:1px solid #00a2ff; color:#00a2ff; padding:0.6rem; border-radius:6px; font-weight:700; cursor:pointer;" onclick="irAlPaso2('09:00 AM')">09:00 AM</button>
+              <button style="background:white; border:1px solid #00a2ff; color:#00a2ff; padding:0.6rem; border-radius:6px; font-weight:700; cursor:pointer;" onclick="irAlPaso2('11:30 AM')">11:30 AM</button>
+              <button style="background:white; border:1px solid #00a2ff; color:#00a2ff; padding:0.6rem; border-radius:6px; font-weight:700; cursor:pointer;" onclick="irAlPaso2('03:00 PM')">03:00 PM</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: DETAILS FORM -->
+        <div id="calendly-step-2" style="display:none; flex-direction:column; gap:1rem;">
+          <div style="text-align:center; margin-bottom: 0.5rem;">
+            <h4 style="font-size:1.15rem; font-weight:700; color:#1a202c; margin-bottom:0.25rem;">Completa tus Datos de Reserva</h4>
+            <p style="font-size:0.85rem; color:#718096;">Reunión agendada para el <strong id="reserva-fecha-lbl">4 de Junio</strong> a las <strong id="reserva-hora-lbl">09:00 AM</strong>.</p>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label style="font-size:0.78rem; font-weight:700; color:#4a5568;">Nombre del Negocio / Empresa *</label>
+            <input type="text" id="cal-form-biz" placeholder="Ej: Clínica Dental El Sol" style="padding:0.65rem; border:1px solid #cbd5e0; border-radius:6px; font-family:var(--sans-body); font-size:0.88rem; outline:none;" required>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <label style="font-size:0.78rem; font-weight:700; color:#4a5568;">Nombre del Contacto *</label>
+              <input type="text" id="cal-form-contact" placeholder="Ej: Dra. María López" style="padding:0.65rem; border:1px solid #cbd5e0; border-radius:6px; font-family:var(--sans-body); font-size:0.88rem; outline:none;" required>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <label style="font-size:0.78rem; font-weight:700; color:#4a5568;">Sector / Nicho *</label>
+              <select id="cal-form-niche" style="padding:0.65rem; border:1px solid #cbd5e0; border-radius:6px; font-family:var(--sans-body); font-size:0.88rem; outline:none; background:white;">
+                <option value="🦷 Dental">🦷 Dental / Médico</option>
+                <option value="🐾 Veterinaria">🐾 Veterinaria</option>
+                <option value="🍽️ Restaurante">🍽️ Restaurante</option>
+                <option value="🔧 Ferretería">🔧 Ferretería / Comercio</option>
+                <option value="🏢 Servicios">🏢 Servicios Profesionales</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem;">
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <label style="font-size:0.78rem; font-weight:700; color:#4a5568;">WhatsApp (Móvil) *</label>
+              <input type="text" id="cal-form-phone" placeholder="Ej: 50255554444" style="padding:0.65rem; border:1px solid #cbd5e0; border-radius:6px; font-family:var(--sans-body); font-size:0.88rem; outline:none;" required>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <label style="font-size:0.78rem; font-weight:700; color:#4a5568;">Correo Electrónico</label>
+              <input type="email" id="cal-form-email" placeholder="Ej: maria@dental.com" style="padding:0.65rem; border:1px solid #cbd5e0; border-radius:6px; font-family:var(--sans-body); font-size:0.88rem; outline:none;">
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.5rem;">
+            <button type="button" onclick="irAlPaso1()" style="background:#edf2f7; border:none; color:#4a5568; padding:0.65rem 1.25rem; border-radius:6px; font-weight:700; cursor:pointer;">Atrás</button>
+            <button type="button" onclick="confirmarAgendadoCompleto()" style="background:#00a2ff; border:none; color:white; padding:0.65rem 1.5rem; border-radius:6px; font-weight:700; cursor:pointer; box-shadow:0 2px 4px rgba(0,162,255,0.3);">Confirmar Agendado 📅</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="background:#edf2f7; border-top:1px solid #e2e8f0; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px;">
+        <span style="font-size:0.75rem; color:#718096; flex:1; text-align:left; align-self:center;">📅 Zona Horaria: Guatemala (GMT-6)</span>
+      </div>
+    </div>
+  </div>
 
   <!-- FOOTER -->
   <footer>
@@ -1283,7 +1384,6 @@
       leadsResult.textContent = leads;
       roiResult.textContent = formatQ(projectedRevenue);
     }
-
     spendRange.addEventListener('input', updateROI);
     cplRange.addEventListener('input', updateROI);
     updateROI();
@@ -1321,9 +1421,53 @@ Creamos juntos una oferta irresistible y la llevamos a esos clientes vía anunci
 📦 <strong>Logística</strong> — Asistentes que rastrean pedidos, optimizan rutas y anticipan necesidades de inventario.<br>
 💼 <strong>Ventas y Atención</strong> — Chatbots avanzados que atienden 24/7 y escalan casos al equipo cuando es necesario.<br><br>
 Desde un chatbot simple hasta una plataforma completa personalizada, el alcance depende de tu empresa y objetivos.`,
-      agendar: `La mejor manera de avanzar es con una <strong>sesión de descubrimiento de 20 a 30 minutos</strong> donde analizamos tu negocio a fondo y te decimos exactamente qué necesitas.<br><br><a href='https://wa.me/50239443636' target='_blank' class='ws-btn-link'>📱 WhatsApp Directo</a> <a href='https://calendly.com' target='_blank' class='calendly-btn-link'>📅 Agendar Reunión</a>`,
-      sugerir_reunion: `Esa es una excelente pregunta. 😊 La respuesta precisa depende mucho del tipo de empresa, sus procesos actuales y los objetivos que tenga. Para darte una orientación útil y sin rodeos, lo ideal sería una <strong>reunión rápida de 20 a 30 minutos</strong> donde lo analizamos juntos sin compromiso.<br><br><a href='https://wa.me/50239443636' target='_blank' class='ws-btn-link'>📱 Hablemos por WhatsApp</a> <a href='https://calendly.com' target='_blank' class='calendly-btn-link'>📅 Agendar Reunión</a>`
+      agendar: `La mejor manera de avanzar es con una <strong>sesión de descubrimiento de 20 a 30 minutos</strong> donde analizamos tu negocio a fondo y te decimos exactamente qué necesitas.<br><br><a href='https://wa.me/50239442626' target='_blank' class='ws-btn-link'>📱 WhatsApp Directo</a> <button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Agendar Reunión</button>`,
+      sugerir_reunion: `Esa es una excelente pregunta. 😊 La respuesta precisa depende mucho del tipo de empresa, sus procesos actuales y los objetivos que tenga. Para darte una orientación útil y sin rodeos, lo ideal sería una <strong>reunión rápida de 20 a 30 minutos</strong> donde lo analizamos juntos sin compromiso.<br><br><a href='https://wa.me/50239442626' target='_blank' class='ws-btn-link'>📱 Hablemos por WhatsApp</a> <button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Agendar Reunión</button>`
     };
+
+    // INTENTAR CARGAR FAQS PERSONALIZADAS DESDE LOCALSTORAGE (CRM INTEGRATION)
+    function cargarFaqsPersonalizadas() {
+      const customFaqString = localStorage.getItem('ecrece_landing_faq');
+      if (customFaqString) {
+        try {
+          let cleanFaq = customFaqString;
+          // Decodificar si viene stringificado de JSON (por ejemplo, con comillas y saltos de línea escapados)
+          if (customFaqString.startsWith('"')) {
+            cleanFaq = JSON.parse(customFaqString);
+          }
+          const lines = cleanFaq.split('\n');
+          lines.forEach(line => {
+            const parts = line.split(':');
+            if (parts.length >= 2) {
+              const key = parts[0].trim().toLowerCase();
+              const value = parts.slice(1).join(':').trim();
+              if (key === 'setup' || key === 'precio') {
+                ecreceFacts.precios = `Nuestros servicios se estructuran de la siguiente manera:<br><br>• <strong>Configuración Personalizada (CRM/Bots):</strong> ${value}<br><br>¿Te gustaría agendar una llamada rápida para cotizar tu caso?`;
+              }
+              if (key === 'areas') {
+                ecreceFacts.servicios = `Ofrecemos soluciones avanzadas para optimizar las siguientes áreas de tu empresa:<br><br>${value}<br><br>¿De cuál te gustaría recibir un diagnóstico gratuito?`;
+              }
+              if (key === 'reunion') {
+                ecreceFacts.agendar = `${value}<br><br><a href='https://wa.me/50239442626' target='_blank' class='ws-btn-link'>📱 WhatsApp Directo</a> <button onclick='openCalendlyModal()' class='calendly-btn-link' style='background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;'>📅 Agendar Reunión</button>`;
+                ecreceFacts.sugerir_reunion = `${value}<br><br><button onclick='openCalendlyModal()' class='calendly-btn-link' style='background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;'>📅 Agendar Reunión</button>`;
+              }
+            }
+          });
+        } catch (err) {
+          console.error("Error al cargar FAQs compartidas del CRM:", err);
+        }
+      }
+    }
+
+    // Cargar en el inicio
+    cargarFaqsPersonalizadas();
+
+    // Escuchador para actualizar conocimientos en tiempo real sin recargar la Landing
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'ecrece_landing_faq') {
+        cargarFaqsPersonalizadas();
+      }
+    });
 
     function appendUserMessage(text) {
       const userBubble = document.createElement('div');
@@ -1385,7 +1529,8 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
         } else if (optionText.toLowerCase().includes('whatsapp') || optionText.includes('WhatsApp')) {
           appendBotResponse("¡Perfecto! Haz clic aquí para hablar directo con el equipo de Ecrece:<br><br>" + ecreceFacts.agendar);
         } else if (optionText.includes('Calendario')) {
-          appendBotResponse("Aquí puedes ver los horarios disponibles y agendar tu sesión de descubrimiento gratuita:<br><br>" + ecreceFacts.agendar);
+          openCalendlyModal();
+          appendBotResponse("Desplegando calendario en pantalla...");
         } else {
           appendBotResponse("Entendido. Para cualquier consulta específica, lo mejor es una llamada corta donde analizamos tu negocio en detalle.<br><br>" + ecreceFacts.agendar);
         }
@@ -1417,16 +1562,14 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
           appendBotResponse(ecreceFacts.calificacion);
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('agend') || query.includes('cita') || query.includes('reuni') || query.includes('llamada') || query.includes('calend') || query.includes('whatsapp') || query.includes('contact')) {
-          appendBotResponse("¡Excelente decisión! Agendemos tu diagnóstico gratuito de 15 minutos ahora mismo:<br><br>" + ecreceFacts.agendar);
+          openCalendlyModal();
+          appendBotResponse("¡Excelente decisión! Desplegando el calendario de reservas en pantalla...");
         } else if (query.includes('ia') || query.includes('inteligencia') || query.includes('chatbot') || query.includes('agente') || query.includes('bot') || query.includes('automatiz') || query.includes('robot')) {
           appendBotResponse(ecreceFacts.ia_empresarial);
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('app') || query.includes('aplicacion') || query.includes('aplicación') || query.includes('software') || query.includes('sistema') || query.includes('plataforma') || query.includes('reporte') || query.includes('dashboard') || query.includes('panel')) {
           appendBotResponse(ecreceFacts.ia_empresarial + '<br><br>El alcance y costo de cada proyecto varía según la empresa. Lo mejor es revisarlo juntos.');
           setTimeout(() => appendBotResponse(ecreceFacts.sugerir_reunion), 1000);
-        } else if (query.includes('cuanto') || query.includes('cuánto') || query.includes('costo') || query.includes('precio') || query.includes('inversion') || query.includes('inversión') || query.includes('tarifa') || query.includes('cobra') || query.includes('quetzal') || query.includes('pag')) {
-          appendBotResponse(ecreceFacts.precios);
-          setTimeout(showScheduleOptions, 900);
         } else {
           appendBotResponse(ecreceFacts.sugerir_reunion);
         }
@@ -1437,6 +1580,115 @@ Desde un chatbot simple hasta una plataforma completa personalizada, el alcance 
     userInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') handleCustomInput();
     });
+
+    // CALENDLY MODAL CONTROLS ON LANDING
+    let selectedHora = '09:00 AM';
+    let selectedDia = '4';
+
+    function openCalendlyModal() {
+      document.getElementById('modal-calendly').classList.add('active');
+      irAlPaso1();
+    }
+    function closeModal() {
+      document.getElementById('modal-calendly').classList.remove('active');
+    }
+    function selectDay(day) {
+      selectedDia = day;
+      document.getElementById('reserva-fecha-lbl').textContent = `${day} de Junio`;
+      alert(`📅 Seleccionaste el día ${day} de Junio. Ahora elige una hora.`);
+    }
+    function irAlPaso1() {
+      document.getElementById('calendly-step-1').style.display = 'block';
+      document.getElementById('calendly-step-2').style.display = 'none';
+    }
+    function irAlPaso2(hora) {
+      selectedHora = hora;
+      document.getElementById('reserva-hora-lbl').textContent = hora;
+      document.getElementById('reserva-fecha-lbl').textContent = `${selectedDia} de Junio`;
+      document.getElementById('calendly-step-1').style.display = 'none';
+      document.getElementById('calendly-step-2').style.display = 'flex';
+    }
+    function confirmarAgendadoCompleto() {
+      const bizName = document.getElementById('cal-form-biz').value.trim();
+      const contactName = document.getElementById('cal-form-contact').value.trim();
+      const niche = document.getElementById('cal-form-niche').value;
+      const phone = document.getElementById('cal-form-phone').value.trim();
+      const email = document.getElementById('cal-form-email').value.trim();
+
+      if (!bizName || !contactName || !phone) {
+        alert('Por favor, completa los campos obligatorios: Empresa, Contacto y WhatsApp.');
+        return;
+      }
+
+      // Add to leads database
+      const defaultLeads = [
+        { name: 'Clínica Dental Sonrisa', contact: 'Dr. Mena', niche: '🦷 Dental', city: 'Zona 10', stage: 'meeting', last: 'Me interesa. ¿Cuánto tiempo dura...' },
+        { name: 'Veterinaria Patitas', contact: 'Ana García', niche: '🐾 Veterinaria', city: 'Mixco', stage: 'contact', last: '¿Y los cobros mensuales de cuánto son?' },
+        { name: 'Restaurante El Sabor', contact: 'Carlos López', niche: '🍽️ Restaurante', city: 'Villa Nueva', stage: 'new', last: 'Hola Gualberto, vi tu perfil en...' },
+        { name: 'Ferretería Los Cerritos', contact: 'Ing. Gómez', niche: '🔧 Ferretería', city: 'San Cristóbal', stage: 'closed', last: 'Setup completado con éxito. Q3,500' }
+      ];
+
+      let leads = JSON.parse(localStorage.getItem('ecrece_leads')) || defaultLeads;
+      
+      // Check if lead already exists
+      let existingLead = leads.find(l => l.name.toLowerCase() === bizName.toLowerCase());
+      const bookingText = `📅 Reunión agendada vía Calendly para el ${selectedDia} de Junio a las ${selectedHora}`;
+      
+      if (existingLead) {
+        existingLead.stage = 'meeting';
+        existingLead.last = bookingText;
+        existingLead.contact = contactName;
+      } else {
+        leads.push({
+          name: bizName,
+          contact: contactName,
+          niche: niche,
+          city: 'Guatemala',
+          stage: 'meeting',
+          last: bookingText
+        });
+      }
+      localStorage.setItem('ecrece_leads', JSON.stringify(leads));
+
+      // Also create/update chat thread
+      let chats = JSON.parse(localStorage.getItem('ecrece_chats')) || [];
+      let existingChat = chats.find(c => c.name.toLowerCase() === bizName.toLowerCase());
+      
+      const newMsg = { sender: 'bot', text: bookingText, time: 'Ahora' };
+      
+      if (existingChat) {
+        existingChat.messages.push(newMsg);
+      } else {
+        const id = bizName.toLowerCase().replace(/\s+/g, '-');
+        chats.push({
+          id: id,
+          name: bizName,
+          contact: contactName,
+          channel: 'ws',
+          channelLabel: 'WhatsApp Business',
+          avatar: niche.substring(0,2),
+          botActive: true,
+          messages: [
+            { sender: 'client', text: `Hola, me gustaría agendar la reunión de diagnóstico.`, time: 'Hace 5m' },
+            newMsg
+          ]
+        });
+      }
+      localStorage.setItem('ecrece_chats', JSON.stringify(chats));
+
+      // Trigger a storage event manually for same-page listeners if needed,
+      // but standard localStorage.setItem already triggers it automatically for other tabs!
+      
+      alert(`🎉 ¡Excelente! Reunión agendada para el día ${selectedDia} de Junio a las ${selectedHora} de forma exitosa.\n\nLa ficha de tu negocio "${bizName}" se ha creado y movido automáticamente en el Pipeline del CRM.`);
+      
+      // Reset form
+      document.getElementById('cal-form-biz').value = '';
+      document.getElementById('cal-form-contact').value = '';
+      document.getElementById('cal-form-phone').value = '';
+      document.getElementById('cal-form-email').value = '';
+
+      closeModal();
+    }
   </script>
 </body>
 </html>
