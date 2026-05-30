@@ -1829,79 +1829,6 @@
   // LOGIC & DATA SCRIPTS
   // ========================================================= -->
   <script type="module">
-    // --- CONEXIÓN FIREBASE FIRESTORE EN LA NUBE ---
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // Configuración compartida de Sandbox en la nube de Ecrece (100% gratuita)
-    const fallbackConfig = {
-      apiKey: "AIzaSyDE-EcreceGT-SyncKey9837492813",
-      authDomain: "ecrece-crm-db.firebaseapp.com",
-      projectId: "ecrece-crm-db",
-      storageBucket: "ecrece-crm-db.appspot.com",
-      messagingSenderId: "39442626",
-      appId: "1:39442626:web:ecrece"
-    };
-
-    let activeConfig = fallbackConfig;
-    const customConfig = localStorage.getItem('ecrece_custom_firebase_config');
-    if (customConfig) {
-      try {
-        activeConfig = JSON.parse(customConfig);
-      } catch(e) {
-        console.warn("Usando configuración de Sandbox por defecto");
-      }
-    }
-
-    const app = initializeApp(activeConfig);
-    const db = getFirestore(app);
-
-    // --- ESCUCHADORES DE COLA DE FIREBASE (SINCRONIZACIÓN CLOUD REAL) ---
-    try {
-      // 1. Sincronizar Leads en tiempo real
-      onSnapshot(collection(db, "leads"), (snapshot) => {
-        let cloudLeads = [];
-        snapshot.forEach((doc) => {
-          cloudLeads.push(doc.data());
-        });
-        if (cloudLeads.length > 0) {
-          cloudLeads.forEach(cloudLead => {
-            const idx = leadsData.findIndex(l => l.name.toLowerCase() === cloudLead.name.toLowerCase());
-            if (idx >= 0) {
-              if (leadsData[idx].stage !== cloudLead.stage) {
-                mostrarToast('📅 Cita/Lead Sincronizado', `"${cloudLead.name}" actualizado en Kanban en la etapa "${cloudLead.stage}".`, '⚡');
-              }
-              leadsData[idx] = cloudLead;
-            } else {
-              leadsData.push(cloudLead);
-              mostrarToast('🎉 ¡Nuevo Lead en la Nube!', `"${cloudLead.name}" ingresó desde tu Landing Page online.`, '🎉');
-            }
-          });
-          saveLeadsToStorage();
-          renderLeadsTable();
-          renderKanban();
-          updateDashboard();
-        }
-      });
-
-      // 2. Sincronizar Chats en tiempo real
-      onSnapshot(collection(db, "chats"), (snapshot) => {
-        snapshot.forEach((doc) => {
-          const cloudChat = doc.data();
-          const idx = initialChats.findIndex(c => c.name.toLowerCase() === cloudChat.name.toLowerCase());
-          if (idx >= 0) {
-            initialChats[idx] = cloudChat;
-          } else {
-            initialChats.push(cloudChat);
-          }
-        });
-        saveChatsToStorage();
-        renderChatsList();
-        renderMessages();
-      });
-    } catch(err) {
-      console.warn("Error al inicializar cola de Firestore:", err);
-    }
 
     // --- CONTROL DE ACCESO AL CRM (PANTALLA DE SEGURIDAD) ---
     function verificarCodigoCRM() {
@@ -2277,7 +2204,7 @@
       // Expose the Soporte FAQ configuration globally so the landing page bot can read it instantly!
       const soporteAgent = agentConfigs.find(a => a.id === 'closer' || a.id === 'soporte');
       if (soporteAgent) {
-        localStorage.setItem('ecrece_landing_faq', JSON.stringify(soporteAgent.faq));
+        localStorage.setItem('ecrece_landing_faq', soporteAgent.faq);
       }
     }
 
@@ -2338,7 +2265,7 @@
       openModal('modal-edit-agent');
     }
 
-    async function submitAgentConfig() {
+    function submitAgentConfig() {
       const id = document.getElementById('edit-agent-id').value;
       const agent = agentConfigs.find(a => a.id === id);
       if (!agent) return;
@@ -2353,26 +2280,13 @@
       renderAgents();
       updateDashboardAgents();
 
-      // Sincronizar conocimientos del agente con Firestore en la nube!
-      try {
-        await setDoc(doc(db, "agent_config", agent.id), {
-          id: agent.id,
-          name: agent.name,
-          desc: agent.desc,
-          tone: agent.tone,
-          meta: agent.meta,
-          faq: agent.faq,
-          timestamp: new Date().toISOString()
-        }, { merge: true });
-        console.log("¡Conocimientos de Agente IA sincronizados en la nube!");
-      } catch (err) {
-        console.error("Error al guardar conocimientos del agente en la nube:", err);
-      }
+      // Los conocimientos se guardan en localStorage y la Landing los lee automáticamente
+      console.log('✅ Conocimientos del Agente IA guardados en localStorage. La Landing los leerá en tiempo real.');
 
       const consoleLog = document.getElementById(`log-${id}`);
       const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       if (consoleLog) {
-        consoleLog.innerHTML += `<div class="log-line"><span class="log-time">[${time}]</span><span>Conocimiento y Prompt actualizados y sincronizados en la nube.</span></div>`;
+        consoleLog.innerHTML += `<div class="log-line"><span class="log-time">[${time}]</span><span>Conocimiento y Prompt actualizados y sincronizados con la Landing.</span></div>`;
       }
 
       closeModal('modal-edit-agent');
