@@ -1437,6 +1437,89 @@
       optionsContainer.style.display = 'flex';
     }
 
+    function clasificarIntencion(query) {
+      var intenciones = [
+        {
+          id: 'precios',
+          keywords: ['precio', 'costo', 'cobra', 'cuanto', 'valor', 'tarif', 'presupuesto', 'cotiz', 'quetzales', 'cobro', 'inver'],
+          weight: 4
+        },
+        {
+          id: 'reviews',
+          keywords: ['review', 'reseña', 'reputaci', 'google', 'qr', 'estrellas', 'opinio', 'califica'],
+          weight: 6 // Prioridad ultra-alta para palabras específicas de producto
+        },
+        {
+          id: 'sitios_ia',
+          keywords: ['sitio', 'web', 'página', 'pagina', 'agente de venta', 'landing', 'ventas 24/7'],
+          weight: 5
+        },
+        {
+          id: 'reactivacion',
+          keywords: ['reactiv', 'base de dato', 'cliente', 'dormid', 'inactiv', 'recuperar', 'leads muertos'],
+          weight: 5
+        },
+        {
+          id: 'calendarios',
+          keywords: ['calendario', 'orgánic', 'organico', 'contenido', 'redes social', 'instagram', 'facebook', 'tiktok', 'publica'],
+          weight: 5
+        },
+        {
+          id: 'objecion_bot',
+          keywords: ['robot', 'rígido', 'script', 'chat de respuestas', 'es un bot'],
+          weight: 4
+        },
+        {
+          id: 'objecion_humano',
+          keywords: ['humano', 'personal', 'reemplaz', 'perder', 'toque', 'trato', 'frío'],
+          weight: 4
+        },
+        {
+          id: 'calificacion',
+          keywords: ['calific', 'requisito', 'para quien', 'aplica', 'mi negocio', 'funciona para', 'clinica', 'dentista', 'restaurante'],
+          weight: 4
+        },
+        {
+          id: 'agendamiento',
+          keywords: ['agend', 'cita', 'reuni', 'llamada', 'calend', 'auditor', 'sesion', 'sesión'],
+          weight: 4
+        },
+        {
+          id: 'whatsapp',
+          keywords: ['whatsapp', 'contact', 'hablar', 'escribir', 'teléfono', 'telefono', 'número', 'numero', 'escribirle'],
+          weight: 4
+        },
+        {
+          id: 'saludo',
+          keywords: ['hola', 'buenas', 'buenos', 'hey', 'qué tal', 'que tal', 'buen día', 'saludos'],
+          weight: 3
+        },
+        {
+          id: 'servicios_resumen',
+          keywords: ['servicio', 'que hacen', 'ofrec', 'solucio', 'que venden', 'como funciona', 'funciona el', 'ecosistema', 'ecrece'],
+          weight: 2 // Menor peso para que palabras específicas ganen siempre
+        }
+      ];
+
+      var mejorIntencion = 'desconocido';
+      var maxScore = 0;
+
+      intenciones.forEach(function(intencion) {
+        var score = 0;
+        intencion.keywords.forEach(function(keyword) {
+          if (query.includes(keyword)) {
+            score += intencion.weight;
+          }
+        });
+        if (score > maxScore) {
+          maxScore = score;
+          mejorIntencion = intencion.id;
+        }
+      });
+
+      return mejorIntencion;
+    }
+
     function sendQuickMessage(optionText) {
       optionsContainer.style.display = 'none';
       appendUserMessage(optionText);
@@ -1445,27 +1528,28 @@
       setTimeout(function() {
         var q = optionText.toLowerCase();
         var reply = '';
+        var intent = clasificarIntencion(q);
 
-        if (q.includes('soluciones') || q.includes('servicios') || q.includes('que hacen') || q.includes('ofrec')) {
+        if (intent === 'servicios_resumen') {
           reply = agente.servicios_resumen;
           setTimeout(showServicesOptions, 900);
-        } else if (q.includes('sitio') || q.includes('web') || q.includes('página')) {
+        } else if (intent === 'sitios_ia') {
           reply = agente.sitios_ia;
           setTimeout(showScheduleOptions, 900);
-        } else if (q.includes('review') || q.includes('reseña') || q.includes('reputaci') || q.includes('google') || q.includes('estrellas')) {
+        } else if (intent === 'reviews') {
           reply = agente.reviews;
           setTimeout(showScheduleOptions, 900);
-        } else if (q.includes('reactiv') || q.includes('leads muertos') || q.includes('dormid') || q.includes('inactiv')) {
+        } else if (intent === 'reactivacion') {
           reply = agente.reactivacion;
           setTimeout(showScheduleOptions, 900);
-        } else if (q.includes('calendario') || q.includes('orgánic') || q.includes('contenido')) {
+        } else if (intent === 'calendarios') {
           reply = agente.calendarios;
           setTimeout(showScheduleOptions, 900);
-        } else if (q.includes('precio') || q.includes('costo') || q.includes('cuánto') || q.includes('cuanto') || q.includes('cobra') || q.includes('tarif')) {
+        } else if (intent === 'precios') {
           reply = agente.precios + '<br><br>' + ctaAgendamiento;
-        } else if (q.includes('whatsapp') || q.includes('hablar')) {
+        } else if (intent === 'whatsapp') {
           reply = '¡Perfecto! Haz clic aquí para hablar directo con el equipo:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 Escribir a Ecrece por WhatsApp (+502 39442626)</a>';
-        } else if (q.includes('agendar') || q.includes('auditoría') || q.includes('reunión') || q.includes('cita') || q.includes('calend')) {
+        } else if (intent === 'agendamiento') {
           openCalendlyModal();
           reply = '¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅';
         } else {
@@ -1493,42 +1577,40 @@
 
       setTimeout(function() {
         var reply = '';
+        var intent = clasificarIntencion(query);
 
-        if (query.includes('precio') || query.includes('costo') || query.includes('cobra') || query.includes('cuanto') || query.includes('valor') || query.includes('tarif') || query.includes('presupuesto') || query.includes('cotiz')) {
+        if (intent === 'precios') {
           reply = agente.precios + '<br><br>' + ctaAgendamiento;
-        } else if (query.includes('servicio') || query.includes('que hacen') || query.includes('ofrec') || query.includes('solucio') || query.includes('que venden') || query.includes('como funciona')) {
+        } else if (intent === 'servicios_resumen') {
           reply = agente.servicios_resumen;
           setTimeout(showServicesOptions, 900);
-        } else if (query.includes('sitio') || query.includes('web') || query.includes('página') || query.includes('pagina') || query.includes('agente de venta')) {
+        } else if (intent === 'sitios_ia') {
           reply = agente.sitios_ia;
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('reputaci') || query.includes('reseña') || query.includes('review') || query.includes('google') || query.includes('qr') || query.includes('estrellas')) {
+        } else if (intent === 'reviews') {
           reply = agente.reviews;
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('reactiv') || query.includes('base de dato') || query.includes('cliente') || query.includes('dormid') || query.includes('inactiv') || query.includes('recuperar')) {
+        } else if (intent === 'reactivacion') {
           reply = agente.reactivacion;
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('calendario') || query.includes('orgánic') || query.includes('organico') || query.includes('contenido') || query.includes('redes social') || query.includes('instagram') || query.includes('facebook') || query.includes('tiktok')) {
+        } else if (intent === 'calendarios') {
           reply = agente.calendarios;
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('bot') || query.includes('robot') || query.includes('automátic') || query.includes('automatic') || query.includes('script')) {
+        } else if (intent === 'objecion_bot') {
           reply = agente.objecion_bot;
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('humano') || query.includes('personal') || query.includes('reemplaz') || query.includes('perder') || query.includes('toque')) {
+        } else if (intent === 'objecion_humano') {
           reply = agente.objecion_humano;
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('ia') || query.includes('inteligencia') || query.includes('chatbot') || query.includes('automatiz') || query.includes('tecnolog')) {
-          reply = agente.sitios_ia + '<br><br>Pero eso es solo una de las 4 soluciones. ¿Quieres ver el ecosistema completo?';
-          setTimeout(showServicesOptions, 900);
-        } else if (query.includes('calific') || query.includes('requisito') || query.includes('para quien') || query.includes('aplica') || query.includes('mi negocio') || query.includes('funciona para')) {
+        } else if (intent === 'calificacion') {
           reply = agente.calificacion;
           setTimeout(showScheduleOptions, 900);
-        } else if (query.includes('agend') || query.includes('cita') || query.includes('reuni') || query.includes('llamada') || query.includes('calend') || query.includes('auditor')) {
+        } else if (intent === 'agendamiento') {
           openCalendlyModal();
           reply = '¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅';
-        } else if (query.includes('whatsapp') || query.includes('contact') || query.includes('hablar') || query.includes('escribir') || query.includes('teléfono') || query.includes('telefono') || query.includes('número') || query.includes('numero')) {
+        } else if (intent === 'whatsapp') {
           reply = '¡Claro! Puedes escribirnos directamente:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 WhatsApp Ecrece (+502 39442626)</a><br><br>O si prefieres elegir día y hora para una videollamada:<br><button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Ver Calendario de Auditorías</button>';
-        } else if (query.includes('hola') || query.includes('buenas') || query.includes('buenos') || query.includes('hey') || query.includes('qué tal') || query.includes('buen día') || query.includes('saludos')) {
+        } else if (intent === 'saludo') {
           reply = '¡Hola! 👋 Soy el asistente de Ecrece. Estoy aquí para resolver cualquier duda sobre nuestras soluciones de IA para negocios locales.<br><br>¿En qué puedo ayudarte?';
           setTimeout(showServicesOptions, 900);
         } else {
