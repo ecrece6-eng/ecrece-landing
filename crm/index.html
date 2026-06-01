@@ -1606,6 +1606,20 @@
                   </div>
                 </div>
               </div>
+              
+              <hr style="border:none; border-top:1px solid rgba(255,255,255,0.06);">
+
+              <div>
+                <h4 style="font-size:0.88rem; font-weight:700; color:#ff4f4f; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">
+                  <span style="background:rgba(255,79,79,0.1); padding:4px; border-radius:6px; display:inline-flex;">🗑️</span> Limpieza y Depuración de Datos
+                </h4>
+                <p style="font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-bottom: 0.75rem; line-height: 1.3;">
+                  ¿Quieres eliminar los leads y chats de ejemplo para comenzar con tu CRM limpio? Esta acción restablecerá el almacenamiento local eliminando todos los datos demo y configuraciones.
+                </p>
+                <button type="button" class="form-btn" onclick="clearCRMData()" style="background: linear-gradient(135deg, #ff4f4f 0%, #d62d2d 100%); color: white; border: none; border-radius: 8px; padding: 10px 14px; font-weight: 700; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: transform 0.2s;">
+                  <span>🧹 Limpiar Leads y Chats de Ejemplo</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -2169,7 +2183,7 @@
         tone: 'Consultor sutil y profesional',
         meta: 'Reunión agendada',
         status: 'active',
-        faq: `setup: Setup completos van desde Q1,000 hasta Q10,000 según soluciones de crm, bots, etc.\nprecio: Q1,000 setup inicial básico, Q10,000 implementación de ecosistema total.\nreunion: Agenda una reunión de 20-30 min para evaluar tus objetivos comerciales.`
+        faq: `setup: El valor de cada solución depende enteramente de las necesidades del negocio, el volumen de leads y los procesos a automatizar. No damos precios fijos por chat; se definen tras una consultoría estratégica gratuita de 20 minutos.\nprecio: Cada proyecto se cotiza a la medida de tu negocio tras evaluar tu caso en la auditoría gratuita de 20-30 minutos.\nreunion: Agenda una reunión de 20-30 min para evaluar tus objetivos comerciales.`
       },
       {
         id: 'prospector',
@@ -2187,13 +2201,26 @@
         name: 'Agente Soporte IA',
         sub: 'Facebook & Web',
         avatar: '💬',
-        desc: 'Responde automáticamente preguntas sobre tu negocio basadas en las 10 preguntas y respuestas configuradas sobre setups en quetzales guatemaltecos (Q1,000 - Q10,000).',
+        desc: 'Responde automáticamente preguntas sobre tu negocio basadas en las soluciones a la medida, sin dar precios por chat y guiando al agendamiento.',
         tone: 'Atento y servicial',
         meta: 'Resolver dudas frecuentes',
         status: 'idle',
         faq: `areas: Optimizamos Marketing y Ventas, Administración, Logística y Soporte.\ncontacto: Hablemos vía WhatsApp (+502 39442626) para atenderte formalmente.`
       }
     ];
+
+    // Self-heal/auto-fix old agent configs with price tags from localStorage
+    if (localStorage.getItem('ecrece_agents_config')) {
+      try {
+        let stored = JSON.parse(localStorage.getItem('ecrece_agents_config'));
+        let hasOldPrices = stored.some(a => a.faq && (a.faq.includes('Q1,000') || a.faq.includes('Q10,000') || a.desc.includes('Q10,000')));
+        if (hasOldPrices) {
+          localStorage.removeItem('ecrece_agents_config');
+          // Reload page to clear storage cache and apply new defaults
+          location.reload();
+        }
+      } catch(e) {}
+    }
 
     let agentConfigs = JSON.parse(localStorage.getItem('ecrece_agents_config')) || defaultAgents;
 
@@ -2333,7 +2360,7 @@
         unread: true,
         messages: [
           { sender: 'client', text: 'Buenas noches, ¿qué precio tiene el setup completo para redes y crm?', time: '20:10' },
-          { sender: 'bot', text: '¡Hola Ana! Qué alegre que nos escribas de Veterinaria Patitas. 🐾 Para implementar el ecosistema completo (CRM, perfiles optimizados, campañas y agente de IA) cobramos un Setup que va desde los Q1,000 hasta los Q10,000 quetzales guatemaltecos, dependiendo de las necesidades del negocio. ¿Te gustaría evaluar cuál es el ideal para ti?', time: '20:11' },
+          { sender: 'bot', text: '¡Hola Ana! Qué alegre que nos escribas de Veterinaria Patitas. 🐾 Para darte un precio exacto y justo, primero necesitamos conocer el tamaño de tu negocio, tu volumen de mensajes y qué procesos específicos te gustaría automatizar, ya que cada proyecto se diseña 100% a la medida. ¿Te gustaría agendar una auditoría estratégica gratuita de 20 minutos para que analicemos tu caso y encontremos el sistema adecuado para tu negocio?', time: '20:11' },
           { sender: 'client', text: '¿Y los cobros mensuales de cuánto son?', time: '21:55' }
         ]
       },
@@ -2537,11 +2564,21 @@
       { name: 'Clínica Dental Sonrisa', contact: 'Dr. Mena', niche: '🦷 Dental', city: 'Zona 10', stage: 'meeting', last: 'Me interesa. ¿Cuánto tiempo dura...' },
       { name: 'Veterinaria Patitas', contact: 'Ana García', niche: '🐾 Veterinaria', city: 'Mixco', stage: 'contact', last: '¿Y los cobros mensuales de cuánto son?' },
       { name: 'Restaurante El Sabor', contact: 'Carlos López', niche: '🍽️ Restaurante', city: 'Villa Nueva', stage: 'new', last: 'Hola Gualberto, vi tu perfil en...' },
-      { name: 'Ferretería Los Cerritos', contact: 'Ing. Gómez', niche: '🔧 Ferretería', city: 'San Cristóbal', stage: 'closed', last: 'Setup completado con éxito. Q3,500' }
+      { name: 'Ferretería Los Cerritos', contact: 'Ing. Gómez', niche: '🔧 Ferretería', city: 'San Cristóbal', stage: 'closed', last: 'Implementación completada con éxito.' }
     ];
 
     let leadsData = JSON.parse(localStorage.getItem('ecrece_leads')) || defaultLeads;
     let leadsFiltro = 'todos';
+
+    function clearCRMData() {
+      if (confirm('⚠️ ¿Estás totalmente seguro de que deseas limpiar todos los leads, chats e historial de ejemplo del CRM? Esto reiniciará el CRM con una base de datos limpia sin leads de ejemplo.')) {
+        localStorage.removeItem('ecrece_leads');
+        localStorage.removeItem('ecrece_chats');
+        localStorage.removeItem('ecrece_agents_config');
+        alert('🧹 CRM restablecido con éxito. La página se recargará ahora.');
+        location.reload();
+      }
+    }
 
     function saveLeadsToStorage() {
       localStorage.setItem('ecrece_leads', JSON.stringify(leadsData));

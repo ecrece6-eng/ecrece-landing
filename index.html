@@ -1384,13 +1384,12 @@
     // Rol: Asistente comercial inteligente de Ecrece
     // Tono: Directo, honesto, empático, enfocado en rendimiento
     // Misión: Resolver dudas, derribar objeciones, guiar al agendamiento
-    // REGLA: Máximo 3 turnos → activar protocolo de agendamiento
-    // PROHIBIDO: Dar precios por chat
-    // =================================================================
-
+    // REGLA: A partir del 3er chat, todos sus mensajes llevan sutilmente el CTA de agendar
     var turnCount = 0;
 
     var ctaAgendamiento = 'Para ver si estas herramientas de IA aplican a tu modelo de negocio, lo ideal es agendar una <strong>auditoría gratuita de 20 minutos</strong>.<br><br>No te vamos a vender nada de forma agresiva; la sesión es estrictamente para examinar si Ecrece es la solución que buscas y si tu empresa califica para el tipo de proyectos que ejecutamos.<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 WhatsApp Directo</a> <button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Elegir Día y Hora</button>';
+
+    var ctaSutil = '<br><br>💡 <em>¿Te gustaría ver cómo implementar esto en tu negocio? Hablemos de forma directa:</em><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link" style="padding: 6px 12px; font-size: 0.85rem; margin-top: 4px; display: inline-block;">📱 WhatsApp</a> o <button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.85rem;padding:0;">📅 Agendar Auditoría Gratuita</button>';
 
     var agente = {
       servicios_resumen: 'Ecrece diseña y ejecuta <strong>4 soluciones de IA</strong> para que tu negocio capte, atienda y cierre clientes de forma automatizada:<br><br>1. 🌐 <strong>Sitios Web con IA y Agentes de Ventas</strong> — Páginas que venden + agentes 24/7 que cualifican y cierran.<br>2. ⭐ <strong>Sistema de Reviews Inteligente</strong> — Filtra reseñas: las buenas van a Google, las malas llegan a tu WhatsApp privado.<br>3. 🔄 <strong>Reactivación de Leads Muertos</strong> — Campañas automatizadas para recuperar ventas perdidas sin esfuerzo manual.<br>4. 📅 <strong>Calendarios de Conversión Orgánica</strong> — Estrategias de contenido que convierten seguidores en compradores.',
@@ -1438,44 +1437,48 @@
       optionsContainer.style.display = 'flex';
     }
 
-    function respuestaForzadaAgendamiento() {
-      appendBotResponse('Has hecho excelentes preguntas. 👏 Para darte respuestas realmente útiles y específicas para <strong>tu</strong> negocio, lo mejor es que hablemos directamente.<br><br>' + ctaAgendamiento);
-    }
-
     function sendQuickMessage(optionText) {
       optionsContainer.style.display = 'none';
       appendUserMessage(optionText);
       turnCount++;
 
       setTimeout(function() {
-        if (turnCount > 3) { respuestaForzadaAgendamiento(); return; }
         var q = optionText.toLowerCase();
+        var reply = '';
 
         if (q.includes('soluciones') || q.includes('servicios') || q.includes('que hacen') || q.includes('ofrec')) {
-          appendBotResponse(agente.servicios_resumen);
+          reply = agente.servicios_resumen;
           setTimeout(showServicesOptions, 900);
         } else if (q.includes('sitio') || q.includes('web') || q.includes('página')) {
-          appendBotResponse(agente.sitios_ia);
+          reply = agente.sitios_ia;
           setTimeout(showScheduleOptions, 900);
         } else if (q.includes('review') || q.includes('reseña') || q.includes('reputaci') || q.includes('google') || q.includes('estrellas')) {
-          appendBotResponse(agente.reviews);
+          reply = agente.reviews;
           setTimeout(showScheduleOptions, 900);
         } else if (q.includes('reactiv') || q.includes('leads muertos') || q.includes('dormid') || q.includes('inactiv')) {
-          appendBotResponse(agente.reactivacion);
+          reply = agente.reactivacion;
           setTimeout(showScheduleOptions, 900);
         } else if (q.includes('calendario') || q.includes('orgánic') || q.includes('contenido')) {
-          appendBotResponse(agente.calendarios);
+          reply = agente.calendarios;
           setTimeout(showScheduleOptions, 900);
         } else if (q.includes('precio') || q.includes('costo') || q.includes('cuánto') || q.includes('cuanto') || q.includes('cobra') || q.includes('tarif')) {
-          appendBotResponse(agente.precios + '<br><br>' + ctaAgendamiento);
+          reply = agente.precios + '<br><br>' + ctaAgendamiento;
         } else if (q.includes('whatsapp') || q.includes('hablar')) {
-          appendBotResponse('¡Perfecto! Haz clic aquí para hablar directo con el equipo:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 Escribir a Ecrece por WhatsApp (+502 39442626)</a>');
+          reply = '¡Perfecto! Haz clic aquí para hablar directo con el equipo:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 Escribir a Ecrece por WhatsApp (+502 39442626)</a>';
         } else if (q.includes('agendar') || q.includes('auditoría') || q.includes('reunión') || q.includes('cita') || q.includes('calend')) {
           openCalendlyModal();
-          appendBotResponse('¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅');
+          reply = '¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅';
         } else {
-          appendBotResponse('Buena pregunta. ' + ctaAgendamiento);
+          reply = 'Buena pregunta. ' + ctaAgendamiento;
         }
+
+        // Si ya es el 3er mensaje o posterior, agregamos el CTA sutil
+        if (turnCount >= 3) {
+          if (!reply.includes(ctaAgendamiento) && !reply.includes('Calendario de Auditorías') && !reply.includes('openCalendlyModal()')) {
+            reply += ctaSutil;
+          }
+        }
+        appendBotResponse(reply);
       }, 800);
     }
 
@@ -1489,47 +1492,63 @@
       turnCount++;
 
       setTimeout(function() {
-        if (turnCount > 3) { respuestaForzadaAgendamiento(); return; }
+        var reply = '';
 
         if (query.includes('precio') || query.includes('costo') || query.includes('cobra') || query.includes('cuanto') || query.includes('valor') || query.includes('tarif') || query.includes('presupuesto') || query.includes('cotiz')) {
-          appendBotResponse(agente.precios + '<br><br>' + ctaAgendamiento);
+          reply = agente.precios + '<br><br>' + ctaAgendamiento;
         } else if (query.includes('servicio') || query.includes('que hacen') || query.includes('ofrec') || query.includes('solucio') || query.includes('que venden') || query.includes('como funciona')) {
-          appendBotResponse(agente.servicios_resumen);
+          reply = agente.servicios_resumen;
           setTimeout(showServicesOptions, 900);
         } else if (query.includes('sitio') || query.includes('web') || query.includes('página') || query.includes('pagina') || query.includes('agente de venta')) {
-          appendBotResponse(agente.sitios_ia);
+          reply = agente.sitios_ia;
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('reputaci') || query.includes('reseña') || query.includes('review') || query.includes('google') || query.includes('qr') || query.includes('estrellas')) {
-          appendBotResponse(agente.reviews);
+          reply = agente.reviews;
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('reactiv') || query.includes('base de dato') || query.includes('cliente') || query.includes('dormid') || query.includes('inactiv') || query.includes('recuperar')) {
-          appendBotResponse(agente.reactivacion);
+          reply = agente.reactivacion;
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('calendario') || query.includes('orgánic') || query.includes('organico') || query.includes('contenido') || query.includes('redes social') || query.includes('instagram') || query.includes('facebook') || query.includes('tiktok')) {
-          appendBotResponse(agente.calendarios);
+          reply = agente.calendarios;
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('bot') || query.includes('robot') || query.includes('automátic') || query.includes('automatic') || query.includes('script')) {
-          appendBotResponse(agente.objecion_bot);
+          reply = agente.objecion_bot;
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('humano') || query.includes('personal') || query.includes('reemplaz') || query.includes('perder') || query.includes('toque')) {
-          appendBotResponse(agente.objecion_humano);
+          reply = agente.objecion_humano;
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('ia') || query.includes('inteligencia') || query.includes('chatbot') || query.includes('automatiz') || query.includes('tecnolog')) {
-          appendBotResponse(agente.sitios_ia + '<br><br>Pero eso es solo una de las 4 soluciones. ¿Quieres ver el ecosistema completo?');
+          reply = agente.sitios_ia + '<br><br>Pero eso es solo una de las 4 soluciones. ¿Quieres ver el ecosistema completo?';
           setTimeout(showServicesOptions, 900);
         } else if (query.includes('calific') || query.includes('requisito') || query.includes('para quien') || query.includes('aplica') || query.includes('mi negocio') || query.includes('funciona para')) {
-          appendBotResponse(agente.calificacion);
+          reply = agente.calificacion;
           setTimeout(showScheduleOptions, 900);
         } else if (query.includes('agend') || query.includes('cita') || query.includes('reuni') || query.includes('llamada') || query.includes('calend') || query.includes('auditor')) {
           openCalendlyModal();
-          appendBotResponse('¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅');
+          reply = '¡Excelente decisión! Desplegando el calendario de auditorías en pantalla... 📅';
         } else if (query.includes('whatsapp') || query.includes('contact') || query.includes('hablar') || query.includes('escribir') || query.includes('teléfono') || query.includes('telefono') || query.includes('número') || query.includes('numero')) {
-          appendBotResponse('¡Claro! Puedes escribirnos directamente:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 WhatsApp Ecrece (+502 39442626)</a><br><br>O si prefieres elegir día y hora para una videollamada:<br><button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Ver Calendario de Auditorías</button>');
+          reply = '¡Claro! Puedes escribirnos directamente:<br><br><a href="https://wa.me/50239442626" target="_blank" class="ws-btn-link">📱 WhatsApp Ecrece (+502 39442626)</a><br><br>O si prefieres elegir día y hora para una videollamada:<br><button onclick="openCalendlyModal()" class="calendly-btn-link" style="background:none;border:none;color:#00a2ff;font-weight:bold;cursor:pointer;text-decoration:underline;font-size:0.95rem;">📅 Ver Calendario de Auditorías</button>';
         } else if (query.includes('hola') || query.includes('buenas') || query.includes('buenos') || query.includes('hey') || query.includes('qué tal') || query.includes('buen día') || query.includes('saludos')) {
-          appendBotResponse('¡Hola! 👋 Soy el asistente de Ecrece. Estoy aquí para resolver cualquier duda sobre nuestras soluciones de IA para negocios locales.<br><br>¿En qué puedo ayudarte?');
+          reply = '¡Hola! 👋 Soy el asistente de Ecrece. Estoy aquí para resolver cualquier duda sobre nuestras soluciones de IA para negocios locales.<br><br>¿En qué puedo ayudarte?';
           setTimeout(showServicesOptions, 900);
         } else {
-          appendBotResponse('Esa es una excelente pregunta. 😊 La respuesta precisa depende mucho del tipo de empresa y sus objetivos. Para darte una orientación útil y sin rodeos, lo ideal sería una <strong>auditoría rápida de 20 minutos</strong> donde lo analizamos juntos sin compromiso.<br><br>' + ctaAgendamiento);
+          reply = 'Esa es una excelente pregunta. 😊 La respuesta precisa depende mucho del tipo de empresa y sus objetivos. Para darte una orientación útil y sin compromiso, lo ideal sería una <strong>auditoría rápida de 20 minutos</strong> donde lo analizamos juntos sin compromiso.<br><br>' + ctaAgendamiento;
+        }
+
+        // Si ya es el 3er mensaje o posterior, agregamos el CTA sutil
+        if (turnCount >= 3) {
+          if (!reply.includes(ctaAgendamiento) && !reply.includes('Calendario de Auditorías') && !reply.includes('openCalendlyModal()')) {
+            reply += ctaSutil;
+          }
+        }
+        appendBotResponse(reply);
+      }, 800);
+    }
+
+    sendBtn.addEventListener('click', handleCustomInput);
+    userInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') handleCustomInput();
+    });<strong>auditoría rápida de 20 minutos</strong> donde lo analizamos juntos sin compromiso.<br><br>' + ctaAgendamiento);
         }
       }, 800);
     }
