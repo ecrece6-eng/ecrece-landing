@@ -1283,6 +1283,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
         <span>Prospector IA</span>
       </a>
+
+      <a href="#" class="nav-item" id="nav-flows" onclick="switchView('flows'); return false;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <span>Secuencias & Flujos</span>
+      </a>
       
       <div class="nav-section-label">Conectar & Canales</div>
       
@@ -1692,6 +1697,136 @@
         </div>
       </div>
 
+      <!-- ========== VIEW: AUTOMATION FLOWS ========== -->
+      <div class="view" id="view-flows">
+        <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem; align-items:center;">
+          <div>
+            <h2 style="font-family:var(--title); font-size:1.25rem;">Secuencias y Flujos de Conversión</h2>
+            <p style="font-size:0.8rem; color:var(--text-dim);">Crea y gestiona secuencias automatizadas de mensajes (WhatsApp) y correos electrónicos para nutrir y convertir prospectos.</p>
+          </div>
+          <button class="topbar-btn primary" onclick="openAddFlowModal()">➕ Nueva Secuencia</button>
+        </div>
+
+        <div class="prospector-grid" style="grid-template-columns: 0.9fr 1.1fr; gap: 1.5rem;">
+          
+          <!-- Secuencias Disponibles -->
+          <div class="prospect-form-card" style="gap: 1.25rem;">
+            <h3 style="font-family: var(--title); font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem;">📋 Tus Secuencias Activas</h3>
+            
+            <div id="flows-list-container" style="display:flex; flex-direction:column; gap:1rem;">
+              <!-- Secuencia 1 -->
+              <div class="agent-item" id="flow-item-reactivacion" style="border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 12px; background: rgba(255,255,255,0.02); cursor: pointer;" onclick="selectFlow('reactivacion')">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                  <span style="font-size: 0.9rem; font-weight: 700; color: var(--white-3d);">Reactivación de Leads Dormidos 🔄</span>
+                  <span class="agent-badge active" style="font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; background: rgba(37,211,102,0.1); color: var(--whatsapp-green);">Activa</span>
+                </div>
+                <p style="font-size:0.78rem; color:var(--white-muted); margin-bottom:0.75rem;">Secuencia de reactivación enfocada en base de clientes antiguos inactivos con ofertas de auditoría.</p>
+                <div style="display:flex; gap:0.5rem; font-size:0.75rem; color:var(--text-dim); margin-bottom:0.75rem;">
+                  <span>✉️ 1 Correo</span> • <span>💬 2 WhatsApp</span> • <span>⏱️ 5 días total</span>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                  <button class="topbar-btn ghost" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="event.stopPropagation(); selectFlow('reactivacion')">Editar Pasos</button>
+                  <button class="topbar-btn ghost" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-color: rgba(37,211,102,0.3); color: var(--whatsapp-green);" onclick="event.stopPropagation(); openTriggerFlowModal('reactivacion')">⚡ Lanzar Secuencia</button>
+                </div>
+              </div>
+
+              <!-- Secuencia 2 -->
+              <div class="agent-item" id="flow-item-nutricion" style="border: 1px solid rgba(255,255,255,0.08); padding: 1rem; border-radius: 12px; background: rgba(255,255,255,0.02); cursor: pointer;" onclick="selectFlow('nutricion')">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                  <span style="font-size: 0.9rem; font-weight: 700; color: var(--white-3d);">Nutrición Post-Landing (Reviews & Bots) 🌐</span>
+                  <span class="agent-badge active" style="font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; background: rgba(37,211,102,0.1); color: var(--whatsapp-green);">Activa</span>
+                </div>
+                <p style="font-size:0.78rem; color:var(--white-muted); margin-bottom:0.75rem;">Secuencia de seguimiento inmediato para leads recién registrados en el formulario.</p>
+                <div style="display:flex; gap:0.5rem; font-size:0.75rem; color:var(--text-dim); margin-bottom:0.75rem;">
+                  <span>✉️ 2 Correos</span> • <span>💬 1 WhatsApp</span> • <span>⏱️ 3 días total</span>
+                </div>
+                <div style="display:flex; gap:0.5rem;">
+                  <button class="topbar-btn ghost" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="event.stopPropagation(); selectFlow('nutricion')">Editar Pasos</button>
+                  <button class="topbar-btn ghost" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-color: rgba(37,211,102,0.3); color: var(--whatsapp-green);" onclick="event.stopPropagation(); openTriggerFlowModal('nutricion')">⚡ Lanzar Secuencia</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detalles del Flujo Seleccionado -->
+          <div class="prospect-form-card" style="gap: 1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+              <h3 id="flow-detail-title" style="font-family: var(--title); font-weight: 800; font-size: 1.15rem; margin:0;">⚙️ Línea de Tiempo: Reactivación</h3>
+              <button class="topbar-btn ghost" style="padding:0.25rem 0.6rem; font-size:0.7rem;" onclick="addNewStepToFlow()">➕ Añadir Paso</button>
+            </div>
+            
+            <div id="flow-steps-timeline" style="display:flex; flex-direction:column; gap:1.25rem; position:relative; min-height: 250px;">
+              <!-- Timeline vertical connection bar -->
+              <div style="position:absolute; left:15px; top:10px; bottom:10px; width:2px; background:rgba(255,255,255,0.08); z-index:0;"></div>
+              
+              <!-- Timeline steps get rendered dynamically by JS -->
+            </div>
+          </div>
+
+        </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: TRIGGER AUTOMATION FLOW -->
+  <div class="modal-overlay" id="modal-trigger-flow">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Lanzar Secuencia de Conversión</h3>
+        <button class="close-modal-btn" onclick="closeModal('modal-trigger-flow')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="trigger-flow-type">
+        <p style="font-size: 0.82rem; color: var(--white-muted); margin-bottom: 1rem; line-height: 1.45;">
+          Selecciona qué lead de tu base de datos recibirá esta secuencia automatizada de mensajes y correos.
+        </p>
+        <div class="form-group">
+          <label class="form-label">Seleccionar Lead / Negocio</label>
+          <select id="trigger-flow-lead-select" class="form-select">
+            <!-- Populated dynamically via JS -->
+          </select>
+        </div>
+        <button class="search-btn" style="background:var(--whatsapp-green); color:var(--bg-darker); margin-top:1.25rem; font-weight: 700;" onclick="submitTriggerFlow()">
+          🚀 Iniciar Secuencia Automática
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD NEW FLOW -->
+  <div class="modal-overlay" id="modal-add-flow">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Crear Nueva Secuencia de Automatización</h3>
+        <button class="close-modal-btn" onclick="closeModal('modal-add-flow')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Nombre de la Secuencia</label>
+          <input type="text" id="flow-form-name" class="form-input" placeholder="Ej: Seguimiento Post-Reunión">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descripción o Propósito</label>
+          <input type="text" id="flow-form-desc" class="form-input" placeholder="Ej: Mensajes de seguimiento tras no asistir a la llamada.">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem;">
+          <div class="form-group">
+            <label class="form-label">Canal Predeterminado</label>
+            <select id="flow-form-channel" class="form-select">
+              <option value="ws">WhatsApp Business</option>
+              <option value="smtp">Correo Electrónico (SMTP)</option>
+              <option value="hybrid">Omnicanal (Híbrido)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Intervalo Total (Días)</label>
+            <input type="number" id="flow-form-days" class="form-input" value="3">
+          </div>
+        </div>
+        <button class="search-btn" style="background:var(--success-green); color:var(--bg-darker); margin-top:1.25rem; font-weight: 700;" onclick="submitCreateFlow()">
+          ✅ Crear Secuencia Vacia
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1875,7 +2010,7 @@
       }, 50);
     }
     // NAVIGATION VIEWS
-    const views = ['dashboard', 'inbox', 'leads', 'pipeline', 'agents', 'prospector', 'integrations'];
+    const views = ['dashboard', 'inbox', 'leads', 'pipeline', 'agents', 'prospector', 'integrations', 'flows'];
     const titles = {
       dashboard: 'Dashboard general',
       inbox: 'Inbox Omnicanal de Conversación',
@@ -1883,7 +2018,8 @@
       pipeline: 'Pipeline de Ventas (Funnels)',
       agents: 'Consola de Agentes Multi-IA',
       prospector: 'Buscador Automático de Leads',
-      integrations: 'Conectar & APIs (WhatsApp, Calendly, Correo)'
+      integrations: 'Conectar & APIs (WhatsApp, Calendly, Correo)',
+      flows: 'Secuencias & Automatización (Flujos)'
     };
 
     function switchView(id) {
@@ -1899,6 +2035,7 @@
       if (id === 'dashboard') updateDashboard();
       if (id === 'leads') renderLeadsTable();
       if (id === 'pipeline') renderKanban();
+      if (id === 'flows') renderFlowsView();
     }
 
     // =========================================================
@@ -2986,6 +3123,16 @@
     window.addSelectedToLead = addSelectedToLead;
     window.toggleSimInputs = toggleSimInputs;
     window.dispararWebhookSimulado = dispararWebhookSimulado;
+    
+    // EXPOSE FLOWS FUNCTIONS
+    window.selectFlow = selectFlow;
+    window.openAddFlowModal = openAddFlowModal;
+    window.addNewStepToFlow = addNewStepToFlow;
+    window.openTriggerFlowModal = openTriggerFlowModal;
+    window.submitTriggerFlow = submitTriggerFlow;
+    window.submitCreateFlow = submitCreateFlow;
+    window.editStep = editStep;
+    window.deleteStep = deleteStep;
 
     // REAL WEBHOOK SYNCHRONIZATION FROM HOSTGATOR
     function inyectarLeadCalendlyReal(biz, name, phone, niche) {
@@ -3158,6 +3305,278 @@
           }
         })
         .catch(err => {});
+    }
+
+    // =========================================================
+    // AUTOMATION FLOWS LOGIC ( drip / sequences )
+    // =========================================================
+    const defaultFlows = [
+      {
+        id: 'reactivacion',
+        name: 'Reactivación de Leads Dormidos 🔄',
+        desc: 'Secuencia de reactivación enfocada en base de clientes antiguos inactivos con ofertas de auditoría.',
+        channel: 'hybrid',
+        days: 5,
+        steps: [
+          { num: 1, type: 'ws', title: '💬 WhatsApp de Bienvenida', delay: 'Día 1 (Inmediato)', text: '¡Hola [Contacto]! Qué alegre saludarte de Ecrece. Vi que en el pasado mostraste interés en optimizar tus ventas con IA. ¿Cómo va tu negocio actualmente?' },
+          { num: 2, type: 'smtp', title: '✉️ Correo: Caso de Éxito de Reviews', delay: 'Día 3 (+48 horas)', text: 'Asunto: Cómo una clínica dental en Guatemala triplicó sus opiniones en Google Maps y duplicó su flujo con nuestro filtro de reputación automatizado...' },
+          { num: 3, type: 'ws', title: '💬 WhatsApp: Llamado a Auditoría Estratégica', delay: 'Día 5 (+48 horas)', text: 'Hola [Contacto], liberamos 3 espacios de auditoría gratis de 20 minutos para esta semana. ¿Te gustaría que agendemos una llamada rápida?' }
+        ]
+      },
+      {
+        id: 'nutricion',
+        name: 'Nutrición Post-Landing (Reviews & Bots) 🌐',
+        desc: 'Secuencia de seguimiento inmediato para leads recién registrados en el formulario.',
+        channel: 'hybrid',
+        days: 3,
+        steps: [
+          { num: 1, type: 'smtp', title: '✉️ Correo: ¡Bienvenido a Ecrece!', delay: 'Día 1 (Inmediato)', text: 'Asunto: ¡Gracias por registrarte! Aquí tienes nuestro Whitepaper de Automatización de Ventas con Inteligencia Artificial para acelerar tu negocio...' },
+          { num: 2, type: 'ws', title: '💬 WhatsApp de Diagnóstico', delay: 'Día 2 (+24 horas)', text: '¡Hola [Contacto]! Te saluda el asistente de Ecrece. Vi tu registro en nuestra web. ¿Actualmente atiendes tus leads de forma manual o tienes algún bot?' },
+          { num: 3, type: 'smtp', title: '✉️ Correo: Agenda tu Auditoría de Conversión', delay: 'Día 3 (+24 horas)', text: 'Asunto: Tu consultoría gratuita de 20 minutos está lista. Haz clic aquí para elegir el horario ideal y evaluar la viabilidad de IA en tu empresa...' }
+        ]
+      }
+    ];
+
+    let activeFlowId = 'reactivacion';
+    let flowsData = JSON.parse(localStorage.getItem('ecrece_flows')) || defaultFlows;
+
+    function saveFlowsToStorage() {
+      localStorage.setItem('ecrece_flows', JSON.stringify(flowsData));
+    }
+
+    function renderFlowsView() {
+      const container = document.getElementById('flows-list-container');
+      if (!container) return;
+
+      container.innerHTML = flowsData.map(f => {
+        const isSelected = f.id === activeFlowId;
+        const totalSMTP = f.steps.filter(s => s.type === 'smtp' || s.type === 'email').length;
+        const totalWS = f.steps.filter(s => s.type === 'ws').length;
+        
+        return `
+          <div class="agent-item" id="flow-item-${f.id}" style="border: 1px solid ${isSelected ? 'var(--success-green)' : 'rgba(255,255,255,0.08)'}; padding: 1rem; border-radius: 12px; background: ${isSelected ? 'rgba(52,211,153,0.03)' : 'rgba(255,255,255,0.02)'}; cursor: pointer;" onclick="selectFlow('${f.id}')">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <span style="font-size: 0.9rem; font-weight: 700; color: var(--white-3d);">${f.name}</span>
+              <span class="agent-badge active" style="font-size: 0.7rem; padding: 2px 8px; border-radius: 6px; background: rgba(37,211,102,0.1); color: var(--whatsapp-green);">Activa</span>
+            </div>
+            <p style="font-size:0.78rem; color:var(--white-muted); margin-bottom:0.75rem;">${f.desc}</p>
+            <div style="display:flex; gap:0.5rem; font-size:0.75rem; color:var(--text-dim); margin-bottom:0.75rem;">
+              <span>✉️ ${totalSMTP} Correo${totalSMTP === 1 ? '' : 's'}</span> • <span>💬 ${totalWS} WhatsApp</span> • <span>⏱️ ${f.days} días total</span>
+            </div>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="topbar-btn ghost" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="event.stopPropagation(); selectFlow('${f.id}')">Editar Pasos</button>
+              <button class="topbar-btn ghost" style="padding: 0.35rem 0.75rem; font-size: 0.75rem; border-color: rgba(37,211,102,0.3); color: var(--whatsapp-green);" onclick="event.stopPropagation(); openTriggerFlowModal('${f.id}')">⚡ Lanzar Secuencia</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderFlowTimeline();
+    }
+
+    function selectFlow(id) {
+      activeFlowId = id;
+      renderFlowsView();
+    }
+
+    function renderFlowTimeline() {
+      const flow = flowsData.find(f => f.id === activeFlowId);
+      const container = document.getElementById('flow-steps-timeline');
+      const titleEl = document.getElementById('flow-detail-title');
+      if (!flow || !container) return;
+
+      titleEl.innerHTML = `⚙️ Línea de Tiempo: ${flow.name}`;
+
+      if (flow.steps.length === 0) {
+        container.innerHTML = `
+          <div style="position:absolute; left:15px; top:10px; bottom:10px; width:2px; background:rgba(255,255,255,0.08); z-index:0;"></div>
+          <div class="empty-state" style="padding: 2rem 1rem; z-index:1; position:relative;">
+            <p style="font-size:0.8rem; color:var(--text-dim);">Esta secuencia no tiene pasos activos todavía.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="position:absolute; left:15px; top:10px; bottom:10px; width:2px; background:rgba(255,255,255,0.08); z-index:0;"></div>
+        ` + flow.steps.map((s, idx) => {
+          const color = s.type === 'ws' ? '#25d366' : '#00a2ff';
+          return `
+            <div style="display:flex; gap:1rem; position:relative; z-index:1;">
+              <div style="width:32px; height:32px; border-radius:50%; background:${color}; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:bold; color:white; border:4px solid var(--bg-dark);">${s.num}</div>
+              <div style="flex:1; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); padding:0.75rem; border-radius:10px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem; align-items:center;">
+                  <span style="font-size:0.8rem; font-weight:700; color:var(--white-3d);">${s.title}</span>
+                  <span style="font-size:0.7rem; color:var(--text-dim);">${s.delay}</span>
+                </div>
+                <p style="font-size:0.75rem; color:var(--white-muted); font-family:monospace; background:rgba(0,0,0,0.2); padding:6px; border-radius:6px; margin-top:4px; line-height:1.4; white-space: pre-wrap;">${s.text}</p>
+                <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.5rem;">
+                  <button class="topbar-btn ghost" style="padding:2px 8px; font-size:0.65rem;" onclick="editStep('${flow.id}', ${idx})">✏️ Editar</button>
+                  <button class="topbar-btn ghost" style="padding:2px 8px; font-size:0.65rem; border-color:rgba(255,79,79,0.3); color:#ff4f4f;" onclick="deleteStep('${flow.id}', ${idx})">🗑️ Eliminar</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+    }
+
+    function editStep(flowId, idx) {
+      const flow = flowsData.find(f => f.id === flowId);
+      if (!flow) return;
+      const step = flow.steps[idx];
+      if (!step) return;
+      
+      const newText = prompt(`Editar contenido del mensaje (${step.type === 'ws' ? 'WhatsApp' : 'Correo'}):`, step.text);
+      if (newText !== null && newText.trim() !== "") {
+        step.text = newText.trim();
+        saveFlowsToStorage();
+        renderFlowTimeline();
+        mostrarToast('📝 Paso Actualizado', 'El contenido de la secuencia se guardó con éxito.', '✅');
+      }
+    }
+
+    function deleteStep(flowId, idx) {
+      const flow = flowsData.find(f => f.id === flowId);
+      if (!flow) return;
+      
+      if (confirm('¿Estás seguro de que deseas eliminar este paso de la secuencia?')) {
+        flow.steps.splice(idx, 1);
+        flow.steps.forEach((s, i) => s.num = i + 1);
+        saveFlowsToStorage();
+        renderFlowsView();
+        mostrarToast('🗑️ Paso Eliminado', 'Se eliminó el paso y se reordenó la secuencia.', '🗑️');
+      }
+    }
+
+    function addNewStepToFlow() {
+      const flow = flowsData.find(f => f.id === activeFlowId);
+      if (!flow) return;
+      
+      const type = prompt('Ingresa el tipo de paso (escribe "ws" para WhatsApp, o "email" para Correo):', 'ws');
+      if (type !== 'ws' && type !== 'email') {
+        if (type !== null) alert('Tipo de paso no válido. Escribe "ws" o "email".');
+        return;
+      }
+      
+      const delay = prompt('Ingresa cuándo se enviará (ej: "Día 4 (+24 horas)", "Día 6 (+48 horas)"):', `Día ${flow.steps.length + 2} (+24 horas)`);
+      if (!delay) return;
+      
+      const text = prompt('Escribe el contenido del mensaje o correo (usa [Contacto] para el nombre):');
+      if (!text) return;
+      
+      const nextNum = flow.steps.length + 1;
+      flow.steps.push({
+        num: nextNum,
+        type: type,
+        title: type === 'ws' ? '💬 WhatsApp de Seguimiento' : '✉️ Correo Informativo',
+        delay: delay,
+        text: text
+      });
+      
+      saveFlowsToStorage();
+      renderFlowsView();
+      mostrarToast('➕ Paso Agregado', 'Nuevo paso añadido a la secuencia con éxito.', '🎉');
+    }
+
+    function openAddFlowModal() {
+      openModal('modal-add-flow');
+    }
+
+    function submitCreateFlow() {
+      const name = document.getElementById('flow-form-name').value.trim();
+      const desc = document.getElementById('flow-form-desc').value.trim();
+      const channel = document.getElementById('flow-form-channel').value;
+      const days = parseInt(document.getElementById('flow-form-days').value) || 3;
+      
+      if (!name || !desc) {
+        alert('Por favor completa todos los campos.');
+        return;
+      }
+      
+      const newId = name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9\-]/g, '');
+      
+      flowsData.push({
+        id: newId,
+        name: name,
+        desc: desc,
+        channel: channel,
+        days: days,
+        steps: []
+      });
+      
+      saveFlowsToStorage();
+      closeModal('modal-add-flow');
+      activeFlowId = newId;
+      renderFlowsView();
+      mostrarToast('🎉 Secuencia Creada', `Secuencia "${name}" creada con éxito. Comienza a añadir pasos.`, '✨');
+      
+      document.getElementById('flow-form-name').value = '';
+      document.getElementById('flow-form-desc').value = '';
+    }
+
+    function openTriggerFlowModal(flowId) {
+      document.getElementById('trigger-flow-type').value = flowId;
+      const select = document.getElementById('trigger-flow-lead-select');
+      if (!select) return;
+      
+      select.innerHTML = leadsData.map(l => `
+        <option value="${l.name}">${l.name} (${l.contact}) - [${l.stage}]</option>
+      `).join('');
+      
+      openModal('modal-trigger-flow');
+    }
+
+    function submitTriggerFlow() {
+      const flowId = document.getElementById('trigger-flow-type').value;
+      const leadName = document.getElementById('trigger-flow-lead-select').value;
+      const flow = flowsData.find(f => f.id === flowId);
+      const lead = leadsData.find(l => l.name === leadName);
+      
+      if (!flow || !lead) {
+        alert('Error al seleccionar flujo o lead.');
+        return;
+      }
+      
+      closeModal('modal-trigger-flow');
+      mostrarToast('🚀 Secuencia Lanzada', `Se ha iniciado la secuencia "${flow.name}" para ${lead.name}.`, '✨');
+      
+      setTimeout(() => {
+        if (flow.steps.length > 0) {
+          const step1 = flow.steps[0];
+          const textReal = step1.text.replace('[Contacto]', lead.contact);
+          
+          let existingChat = initialChats.find(c => c.name.toLowerCase() === lead.name.toLowerCase());
+          const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          
+          if (step1.type === 'ws') {
+            if (existingChat) {
+              existingChat.messages.push({ sender: 'sent', text: `[Automatización - ${step1.title}]\n${textReal}`, time });
+            } else {
+              const id = lead.name.toLowerCase().replace(/\s+/g, '-');
+              initialChats.push({
+                id: id,
+                name: lead.name,
+                contact: lead.contact,
+                channel: 'ws',
+                channelLabel: 'WhatsApp Business',
+                avatar: '💬',
+                botActive: false,
+                messages: [{ sender: 'sent', text: `[Automatización - ${step1.title}]\n${textReal}`, time }]
+              });
+            }
+            saveChatsToStorage();
+            renderMessages();
+            renderChatsList();
+            
+            lead.last = `Enviado: ${step1.title}`;
+            saveLeadsToStorage();
+            renderLeadsTable();
+            mostrarToast('💬 Mensaje Automático Enviado', `Se envió WhatsApp de Bienvenida a ${lead.contact} (${lead.name})`, '💬');
+          } else {
+            mostrarToast('✉️ Correo Automático Enviado', `Se envió el correo "${step1.title}" a ${lead.contact} (${lead.name})`, '✉️');
+          }
+        }
+      }, 1500);
     }
 
     setTimeout(sincronizarWebhooksReales, 1000);
