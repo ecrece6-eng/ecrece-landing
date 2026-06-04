@@ -2986,6 +2986,182 @@
     window.addSelectedToLead = addSelectedToLead;
     window.toggleSimInputs = toggleSimInputs;
     window.dispararWebhookSimulado = dispararWebhookSimulado;
+
+    // REAL WEBHOOK SYNCHRONIZATION FROM HOSTGATOR
+    function inyectarLeadCalendlyReal(biz, name, phone, niche) {
+      const bookingText = `📅 Cita real agendada vía Calendly para: ${new Date().toLocaleDateString()}`;
+      let existingLead = leadsData.find(l => l.name.toLowerCase() === biz.toLowerCase());
+      
+      if (existingLead) {
+        existingLead.stage = 'meeting';
+        existingLead.last = bookingText;
+        existingLead.contact = name;
+      } else {
+        leadsData.push({
+          name: biz,
+          contact: name,
+          niche: niche || '💼 Servicios',
+          city: 'Guatemala (Calendly)',
+          stage: 'meeting',
+          last: bookingText
+        });
+      }
+      saveLeadsToStorage();
+
+      let existingChat = initialChats.find(c => c.name.toLowerCase() === biz.toLowerCase());
+      if (existingChat) {
+        existingChat.messages.push({ sender: 'bot', text: bookingText, time: 'Ahora' });
+      } else {
+        const id = biz.toLowerCase().replace(/\s+/g, '-');
+        initialChats.push({
+          id: id,
+          name: biz,
+          contact: name,
+          channel: 'ws',
+          channelLabel: 'WhatsApp Business',
+          avatar: (niche || '💼').substring(0,2),
+          botActive: true,
+          messages: [
+            { sender: 'client', text: 'Hola, agendé una asesoría.', time: 'Hace 1m' },
+            { sender: 'bot', text: bookingText, time: 'Ahora' }
+          ]
+        });
+      }
+      saveChatsToStorage();
+      mostrarToast('📅 Webhook Calendly Real', `Se agendó cita para "${biz}" en el pipeline.`, '🎉');
+    }
+
+    function inyectarMensajeWhatsAppReal(biz, contactName, phone, text) {
+      let existingLead = leadsData.find(l => l.name.toLowerCase() === biz.toLowerCase());
+      if (!existingLead) {
+        leadsData.push({
+          name: biz,
+          contact: contactName,
+          niche: '💼 Servicios',
+          city: 'WhatsApp',
+          stage: 'new',
+          last: text
+        });
+        saveLeadsToStorage();
+      } else {
+        existingLead.last = text;
+        saveLeadsToStorage();
+      }
+
+      let existingChat = initialChats.find(c => c.name.toLowerCase() === biz.toLowerCase());
+      if (existingChat) {
+        existingChat.messages.push({ sender: 'client', text: text, time: 'Ahora' });
+      } else {
+        const id = biz.toLowerCase().replace(/\s+/g, '-');
+        existingChat = {
+          id: id,
+          name: biz,
+          contact: contactName,
+          channel: 'ws',
+          channelLabel: 'WhatsApp Business',
+          avatar: '💬',
+          botActive: true,
+          messages: [{ sender: 'client', text: text, time: 'Ahora' }]
+        };
+        initialChats.push(existingChat);
+      }
+      saveChatsToStorage();
+      mostrarToast('💬 Webhook WhatsApp Real', `Mensaje de "${contactName}": "${text.substring(0,35)}..."`, '💬');
+
+      if (existingChat.botActive) {
+        setTimeout(() => {
+          const cleanText = text.toLowerCase();
+          let botResponse = getFAQResponse(cleanText);
+          if (!botResponse) {
+            botResponse = 'Entendido. Tomamos nota de tu consulta. ¿Te gustaría agendar una reunión corta de 20 a 30 minutos con Gualberto para resolverlo a fondo?';
+          }
+          existingChat.messages.push({ sender: 'bot', text: botResponse, time: 'Ahora' });
+          saveChatsToStorage();
+          renderMessages();
+          renderChatsList();
+        }, 1200);
+      }
+    }
+
+    function procesarPayloadReal(data) {
+      if (!data) return;
+      
+      // 1. Calendly Event
+      if (data.event === 'invitee.created' || (data.payload && data.payload.email)) {
+        const payload = data.payload || data;
+        const name = payload.name || "Cliente Calendly";
+        let biz = name + " Negocio";
+        let phone = "";
+        let niche = "💼 Servicios";
+        
+        if (payload.questions_and_answers && Array.isArray(payload.questions_and_answers)) {
+          payload.questions_and_answers.forEach(qa => {
+            let q = qa.question.toLowerCase();
+            if (q.includes('negocio') || q.includes('empresa') || q.includes('nombre')) {
+              biz = qa.answer;
+            } else if (q.includes('telefono') || q.includes('teléfono') || q.includes('whatsapp') || q.includes('número')) {
+              phone = qa.answer;
+            } else if (q.includes('nicho') || q.includes('giro') || q.includes('sector')) {
+              niche = qa.answer;
+            }
+          });
+        }
+        inyectarLeadCalendlyReal(biz, name, phone, niche);
+      }
+      // 2. WhatsApp Event
+      else if (data.object === 'whatsapp_business_account' || (data.entry && data.entry[0].changes[0].value.messages)) {
+        try {
+          const change = data.entry[0].changes[0].value;
+          const contactObj = change.contacts ? change.contacts[0] : null;
+          const messageObj = change.messages ? change.messages[0] : null;
+          
+          if (messageObj) {
+            const contactName = contactObj ? contactObj.profile.name : "Cliente WhatsApp";
+            const phone = messageObj.from || "";
+            const text = messageObj.text ? messageObj.text.body : "Mensaje de WhatsApp";
+            const biz = contactName + " (WA)";
+            inyectarMensajeWhatsAppReal(biz, contactName, phone, text);
+          }
+        } catch(e) {
+          console.error("Error parsing WhatsApp webhook: ", e);
+        }
+      }
+    }
+
+    function sincronizarWebhooksReales() {
+      fetch('webhook_events.json')
+        .then(response => {
+          if (!response.ok) return [];
+          return response.json();
+        })
+        .then(events => {
+          if (!Array.isArray(events)) return;
+          
+          let processedIds = JSON.parse(localStorage.getItem('ecrece_processed_events')) || [];
+          let newEventsCount = 0;
+          
+          for (let i = events.length - 1; i >= 0; i--) {
+            let event = events[i];
+            if (processedIds.includes(event.id)) continue;
+            
+            procesarPayloadReal(event.data);
+            processedIds.push(event.id);
+            newEventsCount++;
+          }
+          
+          if (newEventsCount > 0) {
+            localStorage.setItem('ecrece_processed_events', JSON.stringify(processedIds));
+            renderLeadsTable();
+            renderChatsList();
+            renderMessages();
+            actualizarPipelineStats();
+          }
+        })
+        .catch(err => {});
+    }
+
+    setTimeout(sincronizarWebhooksReales, 1000);
+    setInterval(sincronizarWebhooksReales, 15000);
   </script>
 </body>
 </html>
