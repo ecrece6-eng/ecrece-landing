@@ -1847,6 +1847,10 @@
           <input type="text" id="lead-form-contact" class="form-input" placeholder="Ej: Dra. Andrea Méndez">
         </div>
         <div class="form-group">
+          <label class="form-label">Correo Electrónico (Opcional)</label>
+          <input type="email" id="lead-form-email" class="form-input" placeholder="Ej: contacto@clinica.com">
+        </div>
+        <div class="form-group">
           <label class="form-label">Nicho de Negocio</label>
           <select id="lead-form-niche" class="form-select">
             <option>🦷 Dental</option>
@@ -2807,6 +2811,7 @@
     function submitLeadManual() {
       const name = document.getElementById('lead-form-name').value.trim();
       const contact = document.getElementById('lead-form-contact').value.trim();
+      const email = document.getElementById('lead-form-email').value.trim();
       const niche = document.getElementById('lead-form-niche').value;
       const city = document.getElementById('lead-form-city').value.trim();
       const channel = document.getElementById('lead-form-channel').value;
@@ -2818,6 +2823,7 @@
       leadsData.push({
         name,
         contact,
+        email: email || '',
         niche,
         city: city || 'Guatemala',
         stage,
@@ -2847,6 +2853,7 @@
       // Reset form fields
       document.getElementById('lead-form-name').value = '';
       document.getElementById('lead-form-contact').value = '';
+      document.getElementById('lead-form-email').value = '';
       document.getElementById('lead-form-city').value = '';
 
       closeModal('modal-add-lead');
@@ -3573,7 +3580,32 @@
             renderLeadsTable();
             mostrarToast('💬 Mensaje Automático Enviado', `Se envió WhatsApp de Bienvenida a ${lead.contact} (${lead.name})`, '💬');
           } else {
-            mostrarToast('✉️ Correo Automático Enviado', `Se envió el correo "${step1.title}" a ${lead.contact} (${lead.name})`, '✉️');
+            const destinationEmail = lead.email || prompt(`El lead "${lead.name}" no tiene correo configurado. Por favor, introduce el correo electrónico del destinatario:`);
+            if (destinationEmail && destinationEmail.trim() !== "") {
+              fetch('send_email.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  to: destinationEmail.trim(),
+                  subject: step1.title,
+                  message: textReal
+                })
+              })
+              .then(res => res.json())
+              .then(resData => {
+                if (resData.status === 'success') {
+                  mostrarToast('✉️ Correo Real Enviado', `Se envió el correo "${step1.title}" a ${lead.contact} (${destinationEmail})`, '✉️');
+                  lead.last = `Enviado Correo: ${step1.title}`;
+                  saveLeadsToStorage();
+                  renderLeadsTable();
+                } else {
+                  mostrarToast('❌ Fallo al enviar Correo', resData.message || 'Error en servidor', '⚠️');
+                }
+              })
+              .catch(err => {
+                mostrarToast('✉️ Correo Simulado', `Se simuló el correo "${step1.title}" a ${lead.contact}`, '✉️');
+              });
+            }
           }
         }
       }, 1500);
